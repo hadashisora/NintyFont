@@ -15,23 +15,20 @@
 #include <QObject>
 #include <cstdint>
 
-#include "formats/fontbase.h"
-#include "viewwidget.h"
-#include "unicodenames.h"
+#include "globalstuffs.h"
 #include "propertylist.h"
-#include "controls/controls.h"
-#include "membercallback.h"
+#include "controls/control.h"
 
 namespace NintyFont::GUI
 {
     class CharPropPanel : public QDockWidget
     {
     private:
-        FontBase **font;
-        QGraphicsScene *fontView; //This is here so that we can access the selected items directly
-        ViewWidget *view; //This is here so that we can force the view to update upon manipulating the glyphs
-        UnicodeNames *unicode; //This is here so we can get Unicode names for characters
-        MemberCallback *editCallback;
+        //FontBase **font;
+        //QGraphicsScene *fontView; //This is here so that we can access the selected items directly
+        //ViewWidget *view; //This is here so that we can force the view to update upon manipulating the glyphs
+        //UnicodeNames *unicode; //This is here so we can get Unicode names for characters
+        GlobalStuffs *globals;
         //Private methods
         uint32_t getIndexOfGlyphInStdVec(std::vector<Glyph *> vec, Glyph *item);
         //GUI stuff
@@ -49,14 +46,14 @@ namespace NintyFont::GUI
         void exportEvent(void);
         void lockControls(void);
         void unlockControls(void);
-        static CallbackFunction editCallbackEvent;
         //Property list stuff
         std::vector<PropertyList::PropertyListEntryDescriptor *> *props;
         std::vector<PropertyList::PropertyBase *> *propList;
         std::vector<Controls::Control *> controls;
     public:
         //Ctor
-        CharPropPanel(FontBase **font, QGraphicsScene *fontView, ViewWidget *view, UnicodeNames *unicode);
+        //CharPropPanel(FontBase **font, QGraphicsScene *fontView, ViewWidget *view, UnicodeNames *unicode);
+        CharPropPanel(GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~CharPropPanel();
         //Public methods

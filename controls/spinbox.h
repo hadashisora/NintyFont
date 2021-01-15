@@ -13,9 +13,9 @@
 #include <cstdint>
 #include <QtWidgets>
 
+#include "globalstuffs.h"
 #include "control.h"
 #include "propertylist.h"
-#include "membercallback.h"
 
 namespace NintyFont::GUI::Controls
 {
@@ -24,12 +24,13 @@ namespace NintyFont::GUI::Controls
     private:
         std::vector<PropertyList::PropertyBase *> **propList; //Pointer to a pointer to property of the selected glyph. Should be set to nullptr if no glyph is selected (or more than one is selected)
         PropertyList::PropertyListEntryDescriptor *descriptor;
-        MemberCallback *toggleCallback;
+        GlobalStuffs *globals;
+        //MemberCallback *toggleCallback;
         //Private methods
         void updateProperty(void);
     public:
         //Ctor
-        SpinBox(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, MemberCallback *toggleCallback = nullptr, QWidget *parent = nullptr);
+        SpinBox(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~SpinBox();
         //Public methods

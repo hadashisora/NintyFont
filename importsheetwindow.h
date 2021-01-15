@@ -12,8 +12,8 @@
 
 #include <QtWidgets>
 
-#include "formats/fontbase.h"
 #include "qfilepathfield.h"
+#include "globalstuffs.h"
 
 namespace NintyFont::GUI
 {
@@ -21,14 +21,15 @@ namespace NintyFont::GUI
     {
     private:
         //Fields
-        FontBase *font;
+        //FontBase *font;
+        GlobalStuffs *globals;
         QComboBox *formatSelector;
         QFilePathField *imagePathField;
         QFilePathField *xlorPathField;
         QPushButton *createButton;
     public:
         //Ctor
-        ImportSheetWindow(FontBase *font, QWidget *parent = nullptr);
+        ImportSheetWindow(GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~ImportSheetWindow();
         //Methods

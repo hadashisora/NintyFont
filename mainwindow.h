@@ -17,12 +17,9 @@
 #include <QMainWindow>
 #include <QObject>
 
-#include "viewwidget.h"
 #include "fontinfopanel.h"
-#include "binarytools/binaryreader.h"
-#include "formats/fontbase.h"
 #include "charproppanel.h"
-#include "unicodenames.h"
+#include "globalstuffs.h"
 
 namespace NintyFont::GUI
 {
@@ -30,8 +27,9 @@ namespace NintyFont::GUI
     {
     private:
         //GUI
-        ViewWidget *view;
-        QGraphicsScene *fontView;
+        GlobalStuffs *globals;
+        // ViewWidget *view;
+        // QGraphicsScene *fontView;
         FontInfoPanel *fontInfo;
         CharPropPanel *charProps;
         QDockWidget *textPreview;
@@ -75,12 +73,12 @@ namespace NintyFont::GUI
         void setZoom(int32_t newIndex);
         QSize sizeHint(void) const;
         //Font stuff
-        FontBase *font = nullptr;
+        //FontBase *font = nullptr;
         //Zoom stuff
         QToolButton *zoomResetBtn;
         uint32_t zoomIndex;
         //Unicode thing
-        UnicodeNames *unicode;
+        //UnicodeNames *unicode;
     public:
         //Ctor
         MainWindow(QWidget *parent = nullptr);

@@ -16,6 +16,7 @@
 #include "importsheetwindow.h"
 #include "aboutwindow.h"
 #include "formats/conv/bfttf.h"
+#include "binarytools/binaryreader.h"
 
 namespace NintyFont::GUI
 {
@@ -24,19 +25,23 @@ namespace NintyFont::GUI
     MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
     {
-        unicode = new UnicodeNames(); //Load the Unicode character names from DerivedName.txt (from ftp://ftp.unicode.org/Public/UNIDATA/UCD.zip)
+        globals = new GlobalStuffs();
+        globals->font = nullptr;
+        globals->zoom = 100;
 
-        fontView = new QGraphicsScene();
-        view = new ViewWidget(&font);
-        view->setScene(fontView);
-        connect(fontView, &QGraphicsScene::selectionChanged, view, &ViewWidget::selectionChangedEvent);
-        setCentralWidget(view);
+        globals->unicode = new UnicodeNames(); //Load the Unicode character names from DerivedName.txt (from ftp://ftp.unicode.org/Public/UNIDATA/UCD.zip)
+
+        globals->fontView = new QGraphicsScene();
+        globals->view = new ViewWidget(globals);
+        globals->view->setScene(globals->fontView);
+        connect(globals->fontView, &QGraphicsScene::selectionChanged, globals->view, &ViewWidget::selectionChangedEvent);
+        setCentralWidget(globals->view);
         setWindowTitle("NintyFont Dev");
         //setWindowIcon();
 
-        fontInfo = new FontInfoPanel(&font);
+        fontInfo = new FontInfoPanel(globals, this);
         fontInfo->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-        charProps = new CharPropPanel(&font, fontView, view, unicode);
+        charProps = new CharPropPanel(globals, this);
         charProps->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         textPreview = nullptr;
 
@@ -189,9 +194,9 @@ namespace NintyFont::GUI
         std::string tmp = fmt::format("{}%", newZoom);
         zoomResetBtn->setText(QString::fromStdString(tmp)); //The stupidity of using QString continues...
 
-        view->scale((float)newZoom/(float)oldZoom, (float)newZoom/(float)oldZoom);
-        view->zoom = newZoom;
-        view->updateLayout();
+        globals->view->scale((float)newZoom/(float)oldZoom, (float)newZoom/(float)oldZoom);
+        globals->zoom = newZoom;
+        globals->view->updateLayout();
     }
 
     QAction *MainWindow::createAction(void (MainWindow::*function)(void), QIcon* icon, QString text, QString statustext, QString shortcut, bool toggle, bool checked)
@@ -211,7 +216,7 @@ namespace NintyFont::GUI
 
     void MainWindow::fileOpenEvent()
     {
-        if (font != nullptr && font->edited)
+        if (globals->font != nullptr && globals->font->edited)
         {
             QMessageBox msg = QMessageBox(this);
             msg.setText("Save changes to file before closing?");
@@ -279,24 +284,24 @@ namespace NintyFont::GUI
         }
 
         //Clear the fontView selection
-        fontView->clearSelection();
+        globals->fontView->clearSelection();
         //Get rid of the old font data if there's any
-        if (font != nullptr) delete font;
+        if (globals->font != nullptr) delete globals->font;
         //Clear the fontView
-        fontView->clear();
+        globals->fontView->clear();
         //Set the new font
-        font = newFont;
-        font->edited = false;
+        globals->font = newFont;
+        globals->font->edited = false;
         //Copy glyphs to GUI
-        for (auto glyph = font->glyphs.begin(); glyph != font->glyphs.end(); glyph++)
+        for (auto glyph = globals->font->glyphs.begin(); glyph != globals->font->glyphs.end(); glyph++)
         {
-            fontView->addItem(*glyph);
+            globals->fontView->addItem(*glyph);
         }
-        view->updateDisplay();
-        view->columns = 1;
-        view->updateLayout();
+        globals->view->updateDisplay();
+        globals->view->columns = 1;
+        globals->view->updateLayout();
         charProps->updateOnFontLoad();
-        fontInfo->updateOnFontLoad(view);
+        fontInfo->updateOnFontLoad();
 
         fileSaveAction->setEnabled(true);
         fileSaveAsAction->setEnabled(true);
@@ -332,7 +337,7 @@ namespace NintyFont::GUI
 
     void MainWindow::fileSaveEvent()
     {
-        if (font == nullptr) return; //Failsafe
+        if (globals->font == nullptr) return; //Failsafe
 
         if (!ignoreSaveWarning)
         {
@@ -356,21 +361,21 @@ namespace NintyFont::GUI
             }
         }
 
-        font->saveBinaryFont(font->fontPath);
-        font->edited = false;
+        globals->font->saveBinaryFont(globals->font->fontPath);
+        globals->font->edited = false;
         statusBar()->showMessage("Successfully overwrote file!");
     }
 
     void MainWindow::fileSaveAsEvent()
     {
-        if (font == nullptr) return; //Failsafe
+        if (globals->font == nullptr) return; //Failsafe
         QString str;
         if (openedFontFormatIndex > -1 && openedFontFormatIndex < NUM_FORMATS) str = QString::fromStdString(fontDescriptors[openedFontFormatIndex].getFileTypeString());
         else str = "Any files (*)";
         QFileDialog dlg = QFileDialog(this, "Save font file", "", str);
         dlg.setFileMode(QFileDialog::FileMode::AnyFile);
         dlg.setAcceptMode(QFileDialog::AcceptSave);
-        dlg.selectFile(QString::fromStdString(font->fontPath));
+        dlg.selectFile(QString::fromStdString(globals->font->fontPath));
         QString filePath = "";
         if (!dlg.exec()) 
         {
@@ -378,11 +383,11 @@ namespace NintyFont::GUI
             return; //Abort if user hasn't selected a file
         }
         filePath = dlg.selectedFiles()[0];
-        font->fontPath = filePath.toStdString();
-        font->saveBinaryFont(font->fontPath);
+        globals->font->fontPath = filePath.toStdString();
+        globals->font->saveBinaryFont(globals->font->fontPath);
         ignoreSaveWarning = true; //Don't nag the user about doing Save As, since we're saving to a different file (assuming the user didn't just overwrite the original file in the Save As dialog, but it's their problem already)
-        setWindowTitle(QString::fromStdString(fmt::format("NintyFont Dev - {}", font->fontPath)));
-        font->edited = false;
+        setWindowTitle(QString::fromStdString(fmt::format("NintyFont Dev - {}", globals->font->fontPath)));
+        globals->font->edited = false;
 
         statusBar()->showMessage("Successfully saved file!");
     }
@@ -396,14 +401,14 @@ namespace NintyFont::GUI
     {
         return;
         FontBase *newFont = nullptr;
-        ImportSheetWindow *dlg = new ImportSheetWindow(newFont);
+        ImportSheetWindow *dlg = new ImportSheetWindow(globals, this);
         dlg->exec();
     }
 
     void MainWindow::fileCloseEvent()
     {
-        if (font == nullptr) return; //Failsafe
-        if (font->edited)
+        if (globals->font == nullptr) return; //Failsafe
+        if (globals->font->edited)
         {
             QMessageBox msg = QMessageBox(this);
             msg.setText("Save changes to file before closing?");
@@ -424,18 +429,18 @@ namespace NintyFont::GUI
         }
 
         //Clear the fontView selection
-        fontView->clearSelection();
+        globals->fontView->clearSelection();
         //Get rid of the old font data
-        delete font; //This takes care of disposing all the internal stuff
+        delete globals->font; //This takes care of disposing all the internal stuff
         //Clear the fontView
-        fontView->clear();
-        font = nullptr;
+        globals->fontView->clear();
+        globals->font = nullptr;
         fileSaveAction->setEnabled(false);
         fileSaveAsAction->setEnabled(false);
         fileCloseAction->setEnabled(false);
 
-        view->updateDisplay();
-        view->updateLayout();
+        globals->view->updateDisplay();
+        globals->view->updateLayout();
         charProps->updateOnFontLoad();
         fontInfo->updateOnFontLoad();
 
@@ -647,9 +652,9 @@ namespace NintyFont::GUI
 
     MainWindow::~MainWindow()
     {
-        delete font;
-        delete view;
-        delete fontView;
+        delete globals->font;
+        delete globals->view;
+        delete globals->fontView;
         delete fontInfo;
         delete charProps;
         delete textPreview;
@@ -660,7 +665,7 @@ namespace NintyFont::GUI
         delete windowToggleFontInfoAction;
         delete windowTogglePreviewAction;
         delete zoomResetBtn;
-        delete unicode;
+        delete globals->unicode;
     }
 }
 

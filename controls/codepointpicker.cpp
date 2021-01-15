@@ -11,14 +11,13 @@
 
 namespace NintyFont::GUI::Controls
 {
-    CodePointPicker::CodePointPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, UnicodeNames *t_unicode, MemberCallback *t_toggleCallback, QWidget *t_parent)
+    CodePointPicker::CodePointPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, GlobalStuffs *t_globals, QWidget *t_parent)
         : QFormLayout(t_parent)
         , Control()
     {
-        unicode = t_unicode;
+        globals = t_globals;
         propList = t_propList;
         descriptor = t_descriptor;
-        toggleCallback = t_toggleCallback;
 
         QFont glyphFont;
         glyphFont.setPointSize(22);
@@ -118,7 +117,8 @@ namespace NintyFont::GUI::Controls
                 throw std::runtime_error("Wrong code point type!");
                 break;
         }
-        doMemberCallback(toggleCallback);
+        globals->font->edited = true;
+        globals->fontView->update();
         updateGlyphNameLabels(codePointEdit->value());
     }
 
@@ -126,7 +126,7 @@ namespace NintyFont::GUI::Controls
     {
         const uint16_t chr[] = {code, 0x0000};
         glyphLabel->setText(QString::fromUtf16(chr));
-        glyphNameLabel->setText(QString::fromStdString(unicode->getCharNameFromUnicodeCodepoint(code)));
+        glyphNameLabel->setText(QString::fromStdString(globals->unicode->getCharNameFromUnicodeCodepoint(code)));
     }
 
     void CodePointPicker::lockControl()

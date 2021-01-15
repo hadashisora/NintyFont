@@ -11,10 +11,10 @@
 
 namespace NintyFont::GUI
 {
-    ImportSheetWindow::ImportSheetWindow(FontBase *t_font, QWidget *t_parent)
+    ImportSheetWindow::ImportSheetWindow(GlobalStuffs *t_globals, QWidget *t_parent)
         : QDialog(t_parent)
     {
-        font = t_font;
+        globals = t_globals;
 
         //Create GUI elements
         QFormLayout *layout = new QFormLayout(this);

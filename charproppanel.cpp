@@ -8,30 +8,51 @@
 
 //Source file for CharPropPanel GUI class
 #include "charproppanel.h"
+#include "controls/controls.h"
 
 namespace NintyFont::GUI
 {
-    CharPropPanel::CharPropPanel(FontBase **t_font, QGraphicsScene *t_fontView, ViewWidget *t_view, UnicodeNames *t_unicode)
-        : QDockWidget()
+    // CharPropPanel::CharPropPanel(FontBase **t_font, QGraphicsScene *t_fontView, ViewWidget *t_view, UnicodeNames *t_unicode)
+    //     : QDockWidget()
+    // {
+    //     //Set the values
+    //     font = t_font;
+    //     fontView = t_fontView;
+    //     view = t_view;
+    //     unicode = t_unicode;
+    //     props = nullptr;
+    //     propList = nullptr;
+    //     w = nullptr;
+    //     layout = nullptr;
+    //     addBtn = nullptr;
+    //     deleteBtn = nullptr;
+    //     editCallback = new MemberCallback{&editCallbackEvent, this, nullptr};
+
+    //     connect(fontView, &QGraphicsScene::selectionChanged, this, &CharPropPanel::updateOnSelectionChanged);
+    //     setWindowTitle("Glyph properties");
+    // }
+
+    CharPropPanel::CharPropPanel(GlobalStuffs *t_globals, QWidget *t_parent)
+        : QDockWidget(t_parent)
     {
         //Set the values
-        font = t_font;
-        fontView = t_fontView;
-        view = t_view;
-        unicode = t_unicode;
+        // font = t_font;
+        // fontView = t_fontView;
+        // view = t_view;
+        // unicode = t_unicode;
+        globals = t_globals;
         props = nullptr;
         propList = nullptr;
         w = nullptr;
         layout = nullptr;
         addBtn = nullptr;
         deleteBtn = nullptr;
-        editCallback = new MemberCallback{&editCallbackEvent, this, nullptr};
 
-        connect(fontView, &QGraphicsScene::selectionChanged, this, &CharPropPanel::updateOnSelectionChanged);
+        connect(globals->fontView, &QGraphicsScene::selectionChanged, this, &CharPropPanel::updateOnSelectionChanged);
         setWindowTitle("Glyph properties");
     }
 
-    QFrame* CharPropPanel::createHorizontalLine()
+    QFrame *CharPropPanel::createHorizontalLine()
     {
         //Ported from BRFNTify-Next
         QFrame *frame = new QFrame();
@@ -41,7 +62,7 @@ namespace NintyFont::GUI
 
     void CharPropPanel::updateOnSelectionChanged()
     {
-        auto items = fontView->selectedItems();
+        auto items = globals->fontView->selectedItems();
         if (items.size() == 1)
         {
             propList = ((Glyph *)items[0])->props;
@@ -67,13 +88,6 @@ namespace NintyFont::GUI
         }
     }
 
-    void CharPropPanel::editCallbackEvent(void *a_self, void *) //Gonna name the "this" argument "self" a-la Python to avoid keyword collision
-    {
-        CharPropPanel *self = (CharPropPanel *)a_self; //Aka f*ck C++, we're gonna do it the C way
-        (*(self->font))->edited = true;
-        //qDebug() << "Char callback" << endl;
-    }
-
     void CharPropPanel::updateOnFontLoad()
     {
         //Delete the existing controls and layout
@@ -89,8 +103,8 @@ namespace NintyFont::GUI
         layout = nullptr;
 
         //Fetch the new list of properties
-        if ((*font) == nullptr) return;
-        props = (*font)->getGlyphPropertyDescriptors();
+        if (globals->font == nullptr) return;
+        props = globals->font->getGlyphPropertyDescriptors();
         if (props == nullptr) return;
 
         //Set up the GUI
@@ -107,7 +121,7 @@ namespace NintyFont::GUI
                 case PropertyList::ControlType::SpinBox:
                 {
                     //auto lyt = new QFormLayout(); //This is a bodge, deal with it
-                    Controls::SpinBox *control = new Controls::SpinBox(&propList, *prop, editCallback);
+                    Controls::SpinBox *control = new Controls::SpinBox(&propList, *prop, globals);
                     lyt->addRow(QString::fromStdString((*prop)->name), control); //Bodge cont'd
                     //layout->addLayout(lyt);
                     controls.push_back(control);
@@ -118,7 +132,7 @@ namespace NintyFont::GUI
                     //auto lyt = new QFormLayout(); //This is a bodge, deal with it
                     bool isHex = false;
                     if ((*prop)->valueRange.first == 1) isHex = true; //If the min of the range is set to one, then we use treat the label as hex (in case it's a numeric property)
-                    Controls::Label *control = new Controls::Label(&propList, *prop, isHex);
+                    Controls::Label *control = new Controls::Label(&propList, *prop, globals, isHex);
                     lyt->addRow(QString::fromStdString((*prop)->name), control); //Bodge cont'd
                     //layout->addLayout(lyt);
                     controls.push_back(control);
@@ -126,7 +140,7 @@ namespace NintyFont::GUI
                 }
                 case PropertyList::ControlType::CodePointPicker:
                 {
-                    Controls::CodePointPicker *control = new Controls::CodePointPicker(&propList, *prop, unicode, editCallback);
+                    Controls::CodePointPicker *control = new Controls::CodePointPicker(&propList, *prop, globals);
                     layout->addLayout(control);
                     controls.push_back(control);
                     break;
@@ -154,9 +168,9 @@ namespace NintyFont::GUI
         connect(deleteBtn, &QPushButton::pressed, this, &CharPropPanel::deleteEvent);
 
         //Add buttons to the layout only if they're needed (as not to give the user a sense of that grayed-out buttons can be turned on somehow)
-        if ((*font)->canCreateCopyGlyphs() || (*font)->canDeleteGlyphs()) layout->addWidget(createHorizontalLine());
-        if ((*font)->canCreateCopyGlyphs()) layout->addWidget(addBtn);
-        if ((*font)->canDeleteGlyphs()) layout->addWidget(deleteBtn);
+        if (globals->font->canCreateCopyGlyphs() || globals->font->canDeleteGlyphs()) layout->addWidget(createHorizontalLine());
+        if (globals->font->canCreateCopyGlyphs()) layout->addWidget(addBtn);
+        if (globals->font->canDeleteGlyphs()) layout->addWidget(deleteBtn);
 
         glyphPixmapView = new QLabel(w);
         layout->addWidget(createHorizontalLine());
@@ -168,37 +182,37 @@ namespace NintyFont::GUI
 
     void CharPropPanel::addEvent()
     {
-        Glyph *newglyph = (*font)->createEmptyGlyph();
-        fontView->addItem(newglyph);
-        (*font)->glyphs.push_back(newglyph);
-        fontView->update();
-        view->updateLayout();
-        (*font)->edited = true;
+        Glyph *newglyph = globals->font->createEmptyGlyph();
+        globals->fontView->addItem(newglyph);
+        globals->font->glyphs.push_back(newglyph);
+        globals->fontView->update();
+        globals->view->updateLayout();
+        globals->font->edited = true;
     }
 
     void CharPropPanel::deleteEvent()
     {
-        auto selectedGlyph = ((Glyph *)fontView->selectedItems()[0]);
-        auto index = getIndexOfGlyphInStdVec((*font)->glyphs, selectedGlyph); //I know it's a bodge...
-        fontView->selectedItems().clear();
-        fontView->removeItem(selectedGlyph);
-        (*font)->glyphs.erase((*font)->glyphs.begin() + index);
+        auto selectedGlyph = ((Glyph *)globals->fontView->selectedItems()[0]);
+        auto index = getIndexOfGlyphInStdVec(globals->font->glyphs, selectedGlyph); //I know it's a bodge...
+        globals->fontView->selectedItems().clear();
+        globals->fontView->removeItem(selectedGlyph);
+        globals->font->glyphs.erase(globals->font->glyphs.begin() + index);
         delete selectedGlyph;
-        fontView->update();
-        view->updateLayout();
-        (*font)->edited = true;
+        globals->fontView->update();
+        globals->view->updateLayout();
+        globals->font->edited = true;
     }
 
     void CharPropPanel::importEvent()
     {
-        auto selectedGlyph = ((Glyph *)fontView->selectedItems()[0]);
+        auto selectedGlyph = ((Glyph *)globals->fontView->selectedItems()[0]);
         selectedGlyph->importEvent();
-        (*font)->edited = true;
+        globals->font->edited = true;
     }
 
     void CharPropPanel::exportEvent()
     {
-        auto selectedGlyph = ((Glyph *)fontView->selectedItems()[0]);
+        auto selectedGlyph = ((Glyph *)globals->fontView->selectedItems()[0]);
         selectedGlyph->exportEvent();
     }
 
@@ -248,7 +262,6 @@ namespace NintyFont::GUI
 
     CharPropPanel::~CharPropPanel()
     {
-        delete editCallback;
         if (layout != nullptr) delete layout;
         if (w != nullptr) delete w;
     }

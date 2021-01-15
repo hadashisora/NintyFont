@@ -13,13 +13,13 @@
 
 namespace NintyFont::GUI::Controls
 {
-    BoolPicker::BoolPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, MemberCallback *t_toggleCallback, QWidget *parent)
-        : QPushButton(parent)
+    BoolPicker::BoolPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, GlobalStuffs *t_globals, QWidget *t_parent)
+        : QPushButton(t_parent)
         , Control()
     {
         propList = t_propList;
         descriptor = t_descriptor;
-        toggleCallback = t_toggleCallback;
+        globals = t_globals;
 
         connect(this, &QPushButton::toggled, this, &BoolPicker::updateProperty);
         setCheckable(true);
@@ -52,8 +52,10 @@ namespace NintyFont::GUI::Controls
         {
             throw std::runtime_error(fmt::format("NintyFont runtime error in {} at line {}: Wrong data type for EndiannessPicker!", __FILE__, __LINE__));
         }
-        doMemberCallback(toggleCallback);
+        globals->font->edited = true;
+        globals->fontView->update();
         updateDisplay();
+
     }
 
     void BoolPicker::updateDisplay()

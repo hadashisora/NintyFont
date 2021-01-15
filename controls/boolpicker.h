@@ -14,10 +14,9 @@
 #include <QObject>
 #include <QtWidgets>
 
+#include "globalstuffs.h"
 #include "control.h"
 #include "propertylist.h"
-#include "unicodenames.h"
-#include "membercallback.h"
 
 namespace NintyFont::GUI::Controls
 {
@@ -26,12 +25,12 @@ namespace NintyFont::GUI::Controls
     private:
         std::vector<PropertyList::PropertyBase *> **propList; //Pointer to a pointer to property list of the selected glyph. Should be set to nullptr if no glyph is selected (or more than one is selected)
         PropertyList::PropertyListEntryDescriptor *descriptor;
-        MemberCallback *toggleCallback;
+        GlobalStuffs *globals;
         //Private methods
         void updateProperty();
     public:
         //Ctor
-        BoolPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, MemberCallback *toggleCallback = nullptr, QWidget *parent = nullptr);
+        BoolPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         virtual ~BoolPicker();
         //Public methods

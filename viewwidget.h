@@ -16,17 +16,22 @@
 #include <QObject>
 #include <QWidget>
 
-#include "formats/fontbase.h"
+#include "globalstuffs.h"
+
+namespace NintyFont
+{
+    struct GlobalStuffs; //Forward-declaration
+}
 
 namespace NintyFont::GUI
 {
     class ViewWidget : public QGraphicsView
     {
     private:
-        FontBase **font; //This is a pointer to a pointer so we don't have to update this value manually
+        GlobalStuffs *globals;
     public:
         //Ctor
-        ViewWidget(FontBase **t_font);
+        ViewWidget(GlobalStuffs *globals);
         //Dtor
         ~ViewWidget();
         //Methods
@@ -36,8 +41,8 @@ namespace NintyFont::GUI
         void selectionChangedEvent(void);
         void drawForeground(QPainter *painter, const QRectF &rect) override;
         //Stuffs
-        float zoom;
-        int32_t columns;
+        //float zoom;
+        uint32_t columns;
         bool drawLeading;
         bool drawAscent;
         bool drawBaseline;

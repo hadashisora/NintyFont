@@ -11,17 +11,15 @@
 
 namespace NintyFont::GUI::Controls
 {
-    SpinBox::SpinBox(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, MemberCallback *t_toggleCallback, QWidget *t_parent)
+    SpinBox::SpinBox(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, GlobalStuffs *t_globals, QWidget *t_parent)
         : QSpinBox(t_parent)
         , Control()
     {
         propList = t_propList;
+        globals = t_globals;
         descriptor = t_descriptor;
-        toggleCallback = t_toggleCallback;
 
         connect(this, QOverload<int32_t>::of(&QSpinBox::valueChanged), this, &SpinBox::updateProperty);
-        //QSpinBox::connect(this, &SpinBox::updateProperty);
-
         setRange(descriptor->valueRange.first, descriptor->valueRange.second);
 
         lockControl();
@@ -165,7 +163,8 @@ namespace NintyFont::GUI::Controls
                 throw std::runtime_error("Wrong code point type!");
                 break;
         }
-        doMemberCallback(toggleCallback);
+        globals->font->edited = true;
+        globals->fontView->update();
     }
 
     SpinBox::~SpinBox()

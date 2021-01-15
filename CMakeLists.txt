@@ -16,6 +16,7 @@ endif()
 
 add_executable(${PROJECT_NAME}
     main.cpp
+    globalstuffs.h
     mainwindow.cpp
     mainwindow.h
     glyph.cpp

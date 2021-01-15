@@ -15,21 +15,19 @@
 #include <QObject>
 #include <cstdint>
 
-#include "formats/fontbase.h"
-#include "viewwidget.h"
-#include "qhexspinbox.h"
-#include "unicodenames.h"
+#include "globalstuffs.h"
 #include "propertylist.h"
-#include "controls/controls.h"
-#include "membercallback.h"
+#include "controls/control.h"
 
 namespace NintyFont::GUI
 {
+    class ViewWidget;
+
     class FontInfoPanel : public QDockWidget
     {
     private:
-        FontBase **font;
-        MemberCallback *editCallback;
+        //FontBase **font;
+        GlobalStuffs *globals;
         //GUI stuff
         QWidget *w;
         QVBoxLayout *layout;
@@ -37,15 +35,13 @@ namespace NintyFont::GUI
         std::vector<PropertyList::PropertyBase *> *propList;
         std::vector<PropertyList::PropertyBase *> *drawablePropList;
         std::vector<Controls::Control *> controls;
-        //Even handling
-        static CallbackFunction editCallbackEvent;
     public:
         //Ctor
-        FontInfoPanel(FontBase **font);
+        FontInfoPanel(GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~FontInfoPanel();
         //Public methods
         void update(void);
-        void updateOnFontLoad(ViewWidget *scene = nullptr);
+        void updateOnFontLoad(void);
     };
 }

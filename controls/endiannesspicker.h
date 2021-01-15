@@ -11,7 +11,6 @@
 #pragma once
 
 #include "boolpicker.h"
-#include "membercallback.h"
 
 namespace NintyFont::GUI::Controls
 {
@@ -19,7 +18,7 @@ namespace NintyFont::GUI::Controls
     {
     public:
         //Ctor
-        EndiannessPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, MemberCallback *toggleCallback = nullptr, QWidget *parent = nullptr);
+        EndiannessPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~EndiannessPicker();
         //Methods

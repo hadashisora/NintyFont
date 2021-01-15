@@ -9,8 +9,8 @@
 
 namespace NintyFont::GUI::Controls
 {
-    EndiannessPicker::EndiannessPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, MemberCallback *t_toggleCallback, QWidget *t_parent)
-        : BoolPicker(t_propList, t_descriptor, t_toggleCallback, t_parent) 
+    EndiannessPicker::EndiannessPicker(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, GlobalStuffs *t_globals, QWidget *t_parent)
+        : BoolPicker(t_propList, t_descriptor, t_globals, t_parent) 
     { 
 
     }

@@ -13,11 +13,11 @@
 
 namespace NintyFont::GUI::Controls
 {
-    Label::Label(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, bool t_isHex, QWidget *t_parent, FontBase *t_font)
+    Label::Label(std::vector<PropertyList::PropertyBase *> **t_propList, PropertyList::PropertyListEntryDescriptor *t_descriptor, GlobalStuffs *t_globals, bool t_isHex, QWidget *t_parent)
         : QLabel(t_parent)
         , Control()
     {
-        font = t_font;
+        globals = t_globals;
         propList = t_propList;
         descriptor = t_descriptor;
         isHex = t_isHex;
@@ -96,13 +96,13 @@ namespace NintyFont::GUI::Controls
                 case PropertyList::PropertyType::ImageFormat:
                 {
                     PropertyList::Property<ImageFormats> *vprop = (PropertyList::Property<ImageFormats> *)(*propList)->at(descriptor->index);
-                    text = fmt::format("{} (0x{:X})", font->getImageFormatString(vprop->value), (uint8_t)vprop->value);
+                    text = globals->font->getImageFormatString(vprop->value);
                     break;
                 }
                 case PropertyList::PropertyType::CharEncoding:
                 {
                     PropertyList::Property<CharEncodings> *vprop = (PropertyList::Property<CharEncodings> *)(*propList)->at(descriptor->index);
-                    text = fmt::format("{} (0x{:X})", font->getCharEncodingString(vprop->value), (uint8_t)vprop->value);
+                    text = globals->font->getCharEncodingString(vprop->value);
                     break;
                 }
                 default:

@@ -8,16 +8,17 @@
 
 // This is the source file for ViewWidget class
 // Based on BRFNTify-Next code, ported to C++
-#include "viewwidget.h"
 #include <QDebug>
+
+#include "viewwidget.h"
 
 namespace NintyFont::GUI
 {
-    ViewWidget::ViewWidget(FontBase** t_font)
+    ViewWidget::ViewWidget(GlobalStuffs* t_globals)
         : QGraphicsView()
     {
-        font = t_font;
-        zoom = 100.0;
+        globals = t_globals;
+        //zoom = 100.0;
         columns = 0;
         drawLeading = false;
         drawAscent = false;
@@ -39,26 +40,26 @@ namespace NintyFont::GUI
 
     void ViewWidget::updateLayout()
     {
-        if (*font == nullptr)
+        if (globals->font == nullptr)
         {
             scene()->setSceneRect(0, 0, 0, 0);
             return;
         }
 
-        auto cellSize = (*font)->getGlyphImageSize();
-        int32_t cols = (int32_t)floor((1.0F / (zoom / 100.0F)) * (float)viewport()->width() / (float)cellSize.first);
+        auto cellSize = globals->font->getGlyphImageSize();
+        int32_t cols = (int32_t)floor((1.0F / (globals->zoom / 100.0F)) * (float)viewport()->width() / (float)cellSize.first);
         if (cols < 1) cols = 1;
 
         columns = cols;
 
-        for (uint32_t i = 0; i < (*font)->glyphs.size(); i++)
+        for (uint32_t i = 0; i < globals->font->glyphs.size(); i++)
         {
             //uint32_t x = (*font)->cellSize.first * (i % cols);
             //uint32_t y = (*font)->cellSize.second * (uint32_t)(i / cols);
-            (*font)->glyphs[i]->setPos(cellSize.first * (i % cols), cellSize.second * (i / cols));
+            globals->font->glyphs[i]->setPos(cellSize.first * (i % cols), cellSize.second * (i / cols));
         }
 
-        scene()->setSceneRect(0, 0, cellSize.first * cols, cellSize.second * (1 + (int32_t)((*font)->glyphs.size() / cols)));
+        scene()->setSceneRect(0, 0, cellSize.first * cols, cellSize.second * (1 + (int32_t)(globals->font->glyphs.size() / cols)));
         update();
     }
 
@@ -71,19 +72,19 @@ namespace NintyFont::GUI
     void ViewWidget::selectionChangedEvent()
     {
         update();
-        //repaint();
+        globals->fontView->update(); //If we don't kick the Scene to update, things will get messy
     }
 
     void ViewWidget::drawForeground(QPainter *painter, const QRectF &rect)
     {
-        if (*font == nullptr) return;
+        if (globals->font == nullptr) return;
 
-        float rows = (*font)->glyphs.size() / columns;
+        float rows = globals->font->glyphs.size() / columns;
         if ((int32_t)rows == rows) rows = (uint32_t)rows;
         else rows = (uint32_t)rows + 1;
 
         //Draw drawable properties
-        (*font)->drawDrawableProperties(painter, rows, columns);
+        globals->font->drawDrawableProperties(painter, rows, columns);
     }
 
     ViewWidget::~ViewWidget()

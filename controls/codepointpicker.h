@@ -13,21 +13,18 @@
 #include <cstdint>
 #include <QtWidgets>
 
-#include "glyph.h"
+#include "globalstuffs.h"
 #include "qhexspinbox.h"
-#include "unicodenames.h"
 #include "control.h"
-#include "membercallback.h"
 
 namespace NintyFont::GUI::Controls
 {
     class CodePointPicker : public QFormLayout, public Control
     {
     private:
-        UnicodeNames *unicode;
         std::vector<PropertyList::PropertyBase *> **propList; //Pointer to a pointer to property list of the selected glyph. Should be set to nullptr if no glyph is selected (or more than one is selected)
         PropertyList::PropertyListEntryDescriptor *descriptor;
-        MemberCallback *toggleCallback;
+        GlobalStuffs *globals;
         //GUI
         QLabel *glyphLabel;
         QLabel *glyphNameLabel;
@@ -37,7 +34,7 @@ namespace NintyFont::GUI::Controls
         void updateGlyphNameLabels(uint16_t code);
     public:
         //Ctor
-        CodePointPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, UnicodeNames *unicode, MemberCallback *toggleCallback = nullptr, QWidget *parent = nullptr);
+        CodePointPicker(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, GlobalStuffs *globals, QWidget *parent = nullptr);
         //Dtor
         ~CodePointPicker();
         //Public methods

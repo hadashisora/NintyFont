@@ -13,22 +13,22 @@
 #include <cstdint>
 #include <QtWidgets>
 
+#include "globalstuffs.h"
 #include "control.h"
 #include "propertylist.h"
-#include "formats/fontbase.h"
 
 namespace NintyFont::GUI::Controls
 {
     class Label : public QLabel, public Control
     {
     private:
-        FontBase *font;
         std::vector<PropertyList::PropertyBase *> **propList;
         PropertyList::PropertyListEntryDescriptor *descriptor;
+        GlobalStuffs *globals;
         bool isHex;
     public:
         //Ctor
-        Label(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, bool isHex = false, QWidget *parent = nullptr, FontBase *font = nullptr);
+        Label(std::vector<PropertyList::PropertyBase *> **propList, PropertyList::PropertyListEntryDescriptor *descriptor, GlobalStuffs *globals, bool isHex = false, QWidget *parent = nullptr);
         //Dtor
         ~Label();
         //Public methods
