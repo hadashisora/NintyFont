@@ -29,8 +29,8 @@ namespace NintyFont::NTR::Format
     {
     public:
         //Ctors
-        FINF(uint32_t t_length, uint8_t t_fontType, uint8_t t_lineFeed, uint16_t t_defaultCharIndex, CharWidths *widths,
-             uint8_t t_encoding, uint8_t t_height = 0xFFU, uint8_t t_width = 0xFFU, uint8_t t_ascent = 0xFFU);
+        FINF(uint32_t length, uint8_t fontType, uint8_t lineFeed, uint16_t defaultCharIndex, CharWidths *widths,
+             uint8_t encoding, uint8_t height = 0xFFU, uint8_t width = 0xFFU, uint8_t ascent = 0xFFU, uint32_t magic = 0x46494E46U);
         FINF(BinaryTools::BinaryReader *br);
         //Dtors
         virtual ~FINF();

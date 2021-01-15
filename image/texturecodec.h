@@ -85,14 +85,23 @@ namespace NintyFont::CTR::Image
         static uint8_t *decodeRGB565(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeRGBA4444(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeLA88(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static uint8_t *decodeHL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static uint8_t *decodeL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        //static uint8_t *decodeHL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        //static uint8_t *decodeL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeA8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeLA44(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static uint8_t *decodeL4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        //static uint8_t *decodeL4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeA4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static uint8_t *decodeETC1(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static uint8_t *decodeETC1A4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        //static uint8_t *decodeETC1(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        //static uint8_t *decodeETC1A4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeRGBA8888(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeRGB888(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeRGBA5551(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeRGBA4444(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeLA88(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeLA44(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static std::vector<uint8_t> *encodeA4(uint8_t *argbBuf, uint16_t width, uint16_t height);
         enum class CtrTexFormat : uint8_t
         {
             RGBA8888 = 0,

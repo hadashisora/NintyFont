@@ -28,8 +28,8 @@ namespace NintyFont::NTR::Format
         uint32_t entriesOffset; //Used to keep track of where to read the entries from, not in the actual data
     public:
         //Ctors
-        CMAP(std::pair<Glyph *, Glyph *> maps);
-        CMAP(uint16_t t_mappingMethod, std::vector<CMAPEntry *> *maps);
+        CMAP(std::pair<Glyph *, Glyph *> maps, uint32_t magic = 0x434D4150U);
+        CMAP(uint16_t t_mappingMethod, std::vector<CMAPEntry *> *maps, uint32_t t_magic = 0x434D4150U);
         CMAP(BinaryTools::BinaryReader *br);
         //Dctor
         ~CMAP();

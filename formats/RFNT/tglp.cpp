@@ -56,7 +56,7 @@ namespace NintyFont::RVL::Format
         else return;
     }
 
-    void TGLP::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets)
+    void TGLP::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets, uint32_t align)
     {
         linker->incLookupValue("blockCount", 1);
         bw->write(magic);
@@ -77,9 +77,9 @@ namespace NintyFont::RVL::Format
         bw->write(sheetHeight);
         linker->addPatchAddr(bw->getPosition(), "sheetPtr");
         bw->write(sheetPtr);
-        //0x10 bytes of null padding
-        bw->write((uint64_t)0x0U);
-        bw->write((uint64_t)0x0U);
+        //pad to the next 0x10 byte boundary
+        uint32_t padBytes = align - (bw->getPosition() % align);
+        if (padBytes != align) for (uint32_t i = 0x0U; i < padBytes; i++) bw->write((uint8_t)0x0U);
         //Image data
         linker->addLookupValue("sheetPtr", bw->getPosition());
         for (auto sheet = sheets->begin(); sheet != sheets->end(); sheet++)
@@ -90,7 +90,7 @@ namespace NintyFont::RVL::Format
             }
         }
         //Padding
-        uint8_t padBytes = 0x4U - (bw->getPosition() % 0x4U); //Yes I know this setup for calculating padding is a bodge...deal with it
+        padBytes = 0x4U - (bw->getPosition() % 0x4U); //Yes I know this setup for calculating padding is a bodge...deal with it
         if (padBytes != 0x4U) for (uint8_t i = 0x0U; i < padBytes; i++) bw->write((uint8_t)0x0U);
         linker->addLookupValue("glyphLength", bw->getPosition() - ptr + 0x8U);
     }

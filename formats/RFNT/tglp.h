@@ -23,16 +23,16 @@ namespace NintyFont::RVL::Format
     {
     public:
         //Ctors
-        TGLP(uint8_t t_cellWidth, uint8_t t_cellHeight, uint8_t t_baselinePos,
-             uint8_t t_maxCharWidth, uint32_t t_sheetSize, uint16_t t_sheetCount, uint16_t t_sheetFormat,
-             uint16_t t_cellsPerRow, uint16_t t_cellsPerColumn, uint16_t t_sheetWidth, uint16_t t_sheetHeight, uint32_t t_magic = 0x54474C50U, uint32_t t_length = 0x0U,
-             uint32_t t_sheetPtr = 0x0U);
+        TGLP(uint8_t cellWidth, uint8_t cellHeight, uint8_t baselinePos,
+             uint8_t maxCharWidth, uint32_t sheetSize, uint16_t sheetCount, uint16_t sheetFormat,
+             uint16_t cellsPerRow, uint16_t cellsPerColumn, uint16_t sheetWidth, uint16_t sheetHeight, uint32_t magic = 0x54474C50U, uint32_t length = 0x0U,
+             uint32_t sheetPtr = 0x0U);
         TGLP(BinaryTools::BinaryReader *br);
         //Dtor
         virtual ~TGLP();
         //Methods
         virtual void validateSignature(void);
-        virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets);
+        virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets, uint32_t align = 0x10);
         //Fields
         uint32_t magic; //Should always be 0x54474C50, TGLP in ASCII
         uint32_t length; //TGLP section length in bytes

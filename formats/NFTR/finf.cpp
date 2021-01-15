@@ -44,9 +44,9 @@ namespace NintyFont::NTR::Format
 
     FINF::FINF(uint32_t t_length, uint8_t t_fontType, uint8_t t_lineFeed, uint16_t t_defaultCharIndex,
                CharWidths *widths, uint8_t t_encoding, uint8_t t_height, uint8_t t_width,
-               uint8_t t_ascent)
+               uint8_t t_ascent, uint32_t t_magic)
     {
-        magic = 0x46494E46U;
+        magic = t_magic;
         length = t_length;
         fontType = t_fontType;
         lineFeed = t_lineFeed;

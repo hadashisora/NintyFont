@@ -348,28 +348,28 @@ namespace NintyFont::CTR
         BinaryTools::BlockLinker *linker = new BinaryTools::BlockLinker(); //Create a block linker, this will write all the pointers and lengths for us
 
         //Create blocks
-        Format::CFNT cfnt = Format::CFNT(NTR::Format::getFontVersion(fontProperties));
+        Format::CFNT cfnt = Format::CFNT();
         NTR::Format::FINF finf = NTR::Format::FINF(0x20, 0x1, NTR::Format::getFontLinefeed(fontProperties), 0U/*Hardcoded altCharIndex to 0*/,
                                                    widthEntries->at(0)->copy()/*Also hardcoded to those of the first glyph*/,
                                                    NTR::Format::getFontCharEncoding(fontProperties), NTR::Format::getFontHeight(fontProperties),
-                                                   NTR::Format::getFontWidth(fontProperties), NTR::Format::getFontAscent(fontProperties));
+                                                   NTR::Format::getFontWidth(fontProperties), NTR::Format::getFontAscent(fontProperties), 0x464E4946U);
         RVL::Format::TGLP tglp = RVL::Format::TGLP(cellSize.first, cellSize.second, NTR::Format::getFontBaseline(fontProperties), maxCharWidth, sheets[0]->size(),
                 sheets.size(), Image::TextureCodec::returnPlatformTextureType(RVL::Format::getRvlFontImageFormat(fontProperties)),
-                cellsPerRow, cellsPerColumn, sheetSize.first, sheetSize.second);
+                cellsPerRow, cellsPerColumn, sheetSize.first, sheetSize.second, 0x504C4754U);
 
-        std::vector<NTR::Format::CWDH *> cwdhHeaders = { new NTR::Format::CWDH(widthEntries) };
+        std::vector<NTR::Format::CWDH *> cwdhHeaders = { new NTR::Format::CWDH(widthEntries, 0x48445743U) };
         std::vector<NTR::Format::CMAP *> cmapHeaders(0);
         for (auto entry = directEntries->begin(); entry != directEntries->end(); entry++)
         {
-            cmapHeaders.push_back(new NTR::Format::CMAP((*entry)));
+            cmapHeaders.push_back(new NTR::Format::CMAP(*entry, 0x50414D43U));
         }
         for (auto entry = tableEntries->begin(); entry != tableEntries->end(); entry++)
         {
-            cmapHeaders.push_back(new NTR::Format::CMAP(0x1U, *entry));
+            cmapHeaders.push_back(new NTR::Format::CMAP(0x1U, *entry, 0x50414D43U));
         }
         for (auto entry = scanEntries->begin(); entry != scanEntries->end(); entry++)
         {
-            cmapHeaders.push_back(new NTR::Format::CMAP(0x2U, *entry));
+            cmapHeaders.push_back(new NTR::Format::CMAP(0x2U, *entry, 0x50414D43U));
         }
 
         //Delete the old file
@@ -378,7 +378,7 @@ namespace NintyFont::CTR
         BinaryTools::BinaryWriter *bw = new BinaryTools::BinaryWriter(filePath, NTR::Format::getFontEndianness(fontProperties));
         cfnt.serialize(bw, linker);
         finf.serialize(bw, linker);
-        tglp.serialize(bw, linker, &sheets);
+        tglp.serialize(bw, linker, &sheets, 0x80); //CTR aligns texture data to 0x80 bytes instead of 0x10 like the Wii does
         linker->addLookupValue("ptrWidth", bw->getPosition());
         for (auto entry = cwdhHeaders.begin(); entry != cwdhHeaders.end(); entry++)
         {

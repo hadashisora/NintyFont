@@ -13,9 +13,9 @@
 
 namespace NintyFont::NTR::Format
 {
-    CWDH::CWDH(std::vector<CharWidths *> *t_entries)
+    CWDH::CWDH(std::vector<CharWidths *> *t_entries, uint32_t t_magic)
     {
-        magic = 0x43574448U;
+        magic = t_magic;
         length = 0x0U;
         indexBegin = 0x0U;
         indexEnd = t_entries->size() - 1;

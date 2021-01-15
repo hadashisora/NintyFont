@@ -27,7 +27,7 @@ namespace NintyFont::NTR::Format
         uint32_t entriesOffset; //Used to keep track of where to read the entries from
     public:
         //Ctor
-        CWDH(std::vector<CharWidths *> *t_entries);
+        CWDH(std::vector<CharWidths *> *entries, uint32_t magic = 0x43574448U);
         CWDH(BinaryTools::BinaryReader *br);
         //Dtor
         ~CWDH();

@@ -16,9 +16,9 @@
 
 namespace NintyFont::NTR::Format
 {
-    CMAP::CMAP(std::pair<Glyph *, Glyph *> t_entries)
+    CMAP::CMAP(std::pair<Glyph *, Glyph *> t_entries, uint32_t t_magic)
     {
-        magic = 0x434D4150U;
+        magic = t_magic;
         length = 0x0U;
         codeBegin = getGlyphCode(t_entries.first->props);
         codeEnd = getGlyphCode(t_entries.second->props);
@@ -29,9 +29,9 @@ namespace NintyFont::NTR::Format
         (*entries)[0] = new CMAPEntry(codeBegin, getGlyphIndex(t_entries.first->props));
     }
 
-    CMAP::CMAP(uint16_t t_mappingMethod, std::vector<CMAPEntry *> *t_entries)
+    CMAP::CMAP(uint16_t t_mappingMethod, std::vector<CMAPEntry *> *t_entries, uint32_t t_magic)
     {
-        magic = 0x434D4150U;
+        magic = t_magic;
         length = 0x0U;
         mappingMethod = t_mappingMethod;
         reserved = 0x0U;
