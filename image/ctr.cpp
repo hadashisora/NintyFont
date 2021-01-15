@@ -634,7 +634,7 @@ namespace NintyFont::CTR::Image
                     uint8_t newpixel = (uint8_t)round((((float)blue + (float)green + (float)red) / 3.0F) / conv);
                     uint8_t newalpha = (uint8_t)round((float)alpha / conv);
 
-                    rgbBuf->at(i++) = newalpha | (newpixel << 4);
+                    rgbBuf->at(i++) = newpixel | (newalpha << 4);
                 }
             }
         }
