@@ -5,12 +5,9 @@
 // the GNU General Public License v3
 // See license.txt in the root of the
 // source tree for full license conditions
-#include <cstdio>
-
 #include "bfttf.h"
 #include "binarytools/binaryreader.h"
 #include "binarytools/binarywriter.h"
-#include "binarytools/endianness.h"
 
 namespace NintyFont
 {
@@ -27,16 +24,13 @@ namespace NintyFont
             case 0xF368DEC1: //Cafe
                 key = 2364726489U;
                 break;
-            case 0xD99B871A: //Win32
+            case 0xD99B871A: //Windows
                 key = 2785117442U;
                 break;
             default:
                 br->close();
                 return Result::WRONG_FILE;
         }
-
-        uint32_t test1 = 0x36F81A1E ^ 1231165446U;
-        uint32_t test2 = test1 ^ 1231165446U;
 
         uint32_t trueLen = br->getTrueFileSize();
         if (trueLen <= 8) 
