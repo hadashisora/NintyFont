@@ -489,8 +489,6 @@ namespace NintyFont::GUI
     void MainWindow::toolsBfttfDecryptEvent()
     {
         doBfttfOp(this, false, BFTTF::Platform::None);
-        //BFTTF::decrypt("/mnt/DATADRIVE/ARCDRIVE/Project NX/hactool/upd301/FontStandard/FontStandard.bfttf", "/mnt/DATADRIVE/ARCDRIVE/Project NX/hactool/upd301/FontStandard/FontStandard.ttf");
-        //BFTTF::encrypt("/mnt/DATADRIVE/ARCDRIVE/Project NX/hactool/upd301/FontStandard/FontStandard.ttf", "/mnt/DATADRIVE/ARCDRIVE/Project NX/hactool/upd301/FontStandard/FontStandard_edit.bfttf", BFTTF::Platform::NX);
     }
 
     void MainWindow::toolsBfttfEncryptNxEvent()
@@ -505,7 +503,7 @@ namespace NintyFont::GUI
 
     void MainWindow::toolsBfttfEncryptWin32Event()
     {
-        doBfttfOp(this, true, BFTTF::Platform::CAFE);
+        doBfttfOp(this, true, BFTTF::Platform::WIN);
     }
 
     void MainWindow::fileExitEvent()
