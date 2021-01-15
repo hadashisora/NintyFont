@@ -251,24 +251,16 @@ namespace NintyFont::RVL::Image
                     {
                         if (xpixel >= width || ypixel >= height) continue;
 
-                        uint8_t data = br->readByte();
+                        uint16_t pixelData = ((uint16_t)br->readByte() << 8 | (uint16_t)br->readByte());
 
-                        uint8_t blue = (uint8_t)((data & 0x1F) * 255 / 0x1F);
+                        uint8_t blue = (pixelData & 0x1f) << 3;
+                        uint8_t green = ((pixelData >> 5) & 0x3f) << 2;
+                        uint8_t red = ((pixelData >> 11) & 0x1f) << 3;
 
-                        uint8_t green1 = (uint8_t)(data >> 5);
-                        data = br->readByte();
-                        uint8_t green2 = (uint8_t)(data & 0x7);
-
-                        uint8_t green = (uint8_t)((green1 << 3) | (green2));
-
-                        uint8_t red = (uint8_t)((data >> 3) * 255 / 0x1F);
-
-                        uint8_t alpha = 0xFF;
-
-                        argbBuf[(((ypixel * width) + xpixel) * 4) + 0] = blue;
-                        argbBuf[(((ypixel * width) + xpixel) * 4) + 1] = green;
-                        argbBuf[(((ypixel * width) + xpixel) * 4) + 2] = red;
-                        argbBuf[(((ypixel * width) + xpixel) * 4) + 3] = alpha;
+                        argbBuf[(((ypixel * width) + xpixel) * 4) + 0] = (blue | (blue >> 5));
+                        argbBuf[(((ypixel * width) + xpixel) * 4) + 1] = (green | (green >> 6));
+                        argbBuf[(((ypixel * width) + xpixel) * 4) + 2] = (red | (red >> 5));
+                        argbBuf[(((ypixel * width) + xpixel) * 4) + 3] = 0xFF;
                     }
                 }
             }
@@ -289,7 +281,7 @@ namespace NintyFont::RVL::Image
                     {
                         if (xpixel >= width || ypixel >= height) continue;
 
-                        uint16_t newpixel = br->readUInt16();
+                        uint16_t newpixel = ((uint16_t)br->readByte() << 8 | (uint16_t)br->readByte());
 
                         uint32_t blue, green, red, alpha;
                         if ((newpixel & 0x8000) == 0x8000) //RGB555
@@ -516,8 +508,8 @@ namespace NintyFont::RVL::Image
         //This is broken...
         std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
         int32_t i = 0;
-        const double convRB = ((double)(1 << 8) - 1.0) / ((double)(1 << 5) - 1.0);
-        const double convG = ((double)(1 << 8) - 1.0) / ((double)(1 << 6) - 1.0);
+        const float convRB = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F);
+        const float convG = ((float)(1 << 8) - 1.0F) / ((float)(1 << 6) - 1.0F);
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
             for (uint16_t xtile = 0; xtile < width; xtile += 4)
@@ -530,15 +522,13 @@ namespace NintyFont::RVL::Image
                         uint8_t green  = argbBuf[(((ypixel * width) + xpixel) * 4) + 1];
                         uint8_t red    = argbBuf[(((ypixel * width) + xpixel) * 4) + 2];
                         uint8_t alpha  = argbBuf[(((ypixel * width) + xpixel) * 4) + 3];
-                        uint16_t newpixelB = std::round(((double)blue * ((double)alpha / 255.0)) / convRB);
-                        uint16_t newpixelG = std::round(((double)green * ((double)alpha / 255.0)) / convG);
-                        uint16_t newpixelR = std::round(((double)red * ((double)alpha / 255.0)) / convRB);
+                        uint16_t newpixelB = std::round(((float)blue * ((float)alpha / 255.0F)) / convRB);
+                        uint16_t newpixelG = std::round(((float)green * ((float)alpha / 255.0F)) / convG);
+                        uint16_t newpixelR = std::round(((float)red * ((float)alpha / 255.0F)) / convRB);
                         uint16_t newpixel = newpixelR << 11 | newpixelG << 5 | newpixelB;
-                        (*rgbBuf)[i] = newpixel >> 8;
-                        i++;
 
-                        (*rgbBuf)[i] = newpixel & 0xFF;
-                        i++;
+                        rgbBuf->at(i++) = newpixel >> 8;
+                        rgbBuf->at(i++) = newpixel & 0xFF;
                     }
                 }
             }
@@ -548,8 +538,10 @@ namespace NintyFont::RVL::Image
 
     std::vector<uint8_t> *TextureCodec::encodeRGB5A3(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        //This is also broken...
         std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        const float conv3 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 3) - 1.0F);
+        const float conv4 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
+        const float conv5 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F);
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
@@ -566,24 +558,23 @@ namespace NintyFont::RVL::Image
                         uint16_t newpixel;
                         if (alpha < 238) //RGB4A3
                         {
-                            uint8_t newpixelB = std::round(blue / 17.0);
-                            uint8_t newpixelG = std::round(green / 17.0);
-                            uint8_t newpixelR = std::round(red / 17.0);
-                            uint8_t newpixelA = std::round(alpha / 7.0);
+                            uint8_t newpixelB = std::round((float)blue / conv4);
+                            uint8_t newpixelG = std::round((float)green / conv4);
+                            uint8_t newpixelR = std::round((float)red / conv4);
+                            uint8_t newpixelA = std::round((float)alpha / conv3);
                             newpixel = (newpixelA << 12) | (newpixelR << 8) | (newpixelG << 4) | newpixelB;
                         }
                         else
                         {
-                            uint8_t newpixelB = std::round(blue / 31.0);
-                            uint8_t newpixelG = std::round(green / 31.0);
-                            uint8_t newpixelR = std::round(red / 31.0);
+                            uint8_t newpixelB = std::round(((float)blue * ((float)alpha / 255.0F)) / conv5);
+                            uint8_t newpixelG = std::round(((float)green * ((float)alpha / 255.0F)) / conv5);
+                            uint8_t newpixelR = std::round(((float)red * ((float)alpha / 255.0F)) / conv5);
                             newpixel = 0x8000 | (newpixelR << 10) | (newpixelG << 5) | newpixelB;
                         }
-                        (*rgbBuf)[i] = newpixel >> 8;
-                        i++;
-
-                        (*rgbBuf)[i] = newpixel & 0xFF;
-                        i++;
+                        
+                        rgbBuf->at(i++) = newpixel >> 8;
+                        rgbBuf->at(i++) = newpixel & 0xFF;
+                        
                     }
                 }
             }
