@@ -56,11 +56,14 @@ namespace NintyFont::GUI
             importBtn->blockSignals(false);
             exportBtn->setEnabled(true);
             exportBtn->blockSignals(false);
+
+            glyphPixmapView->setPixmap(((Glyph *)items[0])->pixmap->scaled(128, 128, Qt::KeepAspectRatio, Qt::FastTransformation));
         }
         else
         {
             propList = nullptr;
             lockControls();
+            glyphPixmapView->setPixmap(QPixmap(128, 128));
         }
     }
 
@@ -136,24 +139,28 @@ namespace NintyFont::GUI
         layout->addLayout(lyt); //This is done so that the code point picker (if there's one) ends up above all other properties, since it has to be inserted differently anyways
 
         //Add Import and Export buttons, they're always visible no matter the format
-        importBtn = new QPushButton("Import");
+        importBtn = new QPushButton("Import", w);
         connect(importBtn, &QPushButton::pressed, this, &CharPropPanel::importEvent);
-        exportBtn = new QPushButton("Export");
+        exportBtn = new QPushButton("Export", w);
         connect(exportBtn, &QPushButton::pressed, this, &CharPropPanel::exportEvent);
         layout->addWidget(createHorizontalLine());
         layout->addWidget(importBtn);
         layout->addWidget(exportBtn);
 
         //Create Add and Delete buttons. They always exist, even if not added to the layout
-        addBtn = new QPushButton("Add");
+        addBtn = new QPushButton("Add", w);
         connect(addBtn, &QPushButton::pressed, this, &CharPropPanel::addEvent);
-        deleteBtn = new QPushButton("Delete");
+        deleteBtn = new QPushButton("Delete", w);
         connect(deleteBtn, &QPushButton::pressed, this, &CharPropPanel::deleteEvent);
 
         //Add buttons to the layout only if they're needed (as not to give the user a sense of that grayed-out buttons can be turned on somehow)
         if ((*font)->canCreateCopyGlyphs() || (*font)->canDeleteGlyphs()) layout->addWidget(createHorizontalLine());
         if ((*font)->canCreateCopyGlyphs()) layout->addWidget(addBtn);
         if ((*font)->canDeleteGlyphs()) layout->addWidget(deleteBtn);
+
+        glyphPixmapView = new QLabel(w);
+        layout->addWidget(createHorizontalLine());
+        layout->addWidget(glyphPixmapView);
 
         layout->addStretch();
         lockControls();

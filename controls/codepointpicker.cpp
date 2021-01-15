@@ -31,6 +31,7 @@ namespace NintyFont::GUI::Controls
         glyphNameLabel = new QLabel();
         //glyphNameLabel->setFont(glyphNameFont);
         glyphNameLabel->setWordWrap(true);
+        glyphNameLabel->setMaximumWidth(128);
 
         codePointEdit = new QHexSpinBox();
         codePointEdit->setRange(descriptor->valueRange.first, descriptor->valueRange.second);

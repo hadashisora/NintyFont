@@ -19,6 +19,8 @@
 
 namespace NintyFont::GUI
 {
+    void saveFontThread(FontBase *font);
+
     MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
     {
@@ -153,6 +155,9 @@ namespace NintyFont::GUI
 
         ignoreSaveWarning = false;
         openedFontFormatIndex = -1;
+
+        // QThread *saveThread = QThread::create(saveFontThread, font);
+        // connect(saveThread, &QThread::finished, this, &MainWindow::saveThreadFinishedEvent);
     }
 
     void MainWindow::zoomPlusEvent()
@@ -305,6 +310,26 @@ namespace NintyFont::GUI
         setWindowTitle(QString::fromStdString(fmt::format("NintyFont Dev - {}", filePath.toStdString())));
     }
 
+    void saveFontThread(FontBase *font)
+    {
+        font->saveBinaryFont(font->fontPath);
+    }
+
+    QDialog *createSavingPopup(MainWindow *w)
+    {
+        QMessageBox *msg = new QMessageBox(w);
+        msg->setText("Saving in progress...");
+        msg->setWindowFlag(Qt::WindowType::FramelessWindowHint, true);
+        msg->setModal(true);
+        return msg;
+    }
+
+    // void MainWindow::saveThreadFinishedEvent()
+    // {
+    //     font->edited = false;
+    //     statusBar()->showMessage("Successfully overwrote file!");
+    // }
+
     void MainWindow::fileSaveEvent()
     {
         if (font == nullptr) return; //Failsafe
@@ -355,7 +380,7 @@ namespace NintyFont::GUI
         filePath = dlg.selectedFiles()[0];
         font->fontPath = filePath.toStdString();
         font->saveBinaryFont(font->fontPath);
-        ignoreSaveWarning = true;
+        ignoreSaveWarning = true; //Don't nag the user about doing Save As, since we're saving to a different file (assuming the user didn't just overwrite the original file in the Save As dialog, but it's their problem already)
         setWindowTitle(QString::fromStdString(fmt::format("NintyFont Dev - {}", font->fontPath)));
         font->edited = false;
 
