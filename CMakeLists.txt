@@ -75,6 +75,7 @@ add_executable(${PROJECT_NAME}
     formats/BFN1/inf1.h
     formats/BFN1/wid1.cpp
     formats/BFN1/wid1.h
+    formats/BFN1/wid1entry.cpp
     formats/BFN1/wid1entry.h
     formats/BFN1/gly1.cpp
     formats/BFN1/gly1.h

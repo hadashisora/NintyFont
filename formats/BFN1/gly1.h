@@ -32,7 +32,7 @@ namespace NintyFont::DOL::Format
         uint16_t endCode; //Code point of last character
         uint16_t cellWidth; //Glyph cell width, in pixels
         uint16_t cellHeight; //Glyph cell height, in pixels
-        uint16_t sheetSize; //Sheet size in bytes
+        uint32_t sheetSize; //Sheet size in bytes
         uint16_t sheetFormat; //Sheet image format
         uint16_t cellsPerRow; //Glyph cells per row
         uint16_t cellsPerColumn; //Glyph cells per column

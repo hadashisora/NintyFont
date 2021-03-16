@@ -27,7 +27,7 @@ namespace NintyFont::DOL::Format
         virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker);
         //Fields
         uint64_t magic; //Should be 0x464F4E5462666E31, FONTbfn1 in ASCII
-        uint32_t length; //Length of the entire file in bytes
+        uint32_t fileSize; //Length of the entire file in bytes
         uint32_t dataBlocks; //Number of other sections/blocks in the file
         //Entire 0x10 bytes of null padding, yay!
     };

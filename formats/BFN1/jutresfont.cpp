@@ -68,7 +68,7 @@ namespace NintyFont::DOL
         //Format::GLY1 *gly1 = nullptr;
         std::vector<Format::GLY1 *> gly1Headers = {};
         std::vector<Format::WID1 *> wid1Headers = {};
-        std::vector<NTR::Format::CharWidths *> charWidths = {};
+        std::vector<Format::WID1Entry *> charWidths = {};
         std::vector<Format::MAP1 *> map1Headers = {};
         std::vector<NTR::Format::CMAPEntry *> charMaps = {};
 
@@ -89,14 +89,18 @@ namespace NintyFont::DOL
             for (uint i = 0; i < bfn1->dataBlocks; i++)
             {
                 uint32_t magic = br->peekUInt32();
+                uint32_t pos = br->getPosition();
                 switch (magic) //This mimmics the order in which the game code checks for these
                 {
                     case 0x4D415031: //MAP1
                     {
                         Format::MAP1 *map1 = new Format::MAP1(br);
-                        map1->readEntries(br);
+                        //bool halfToFull = false;
+                        //if (inf1 != nullptr) halfToFull = (inf1->fontType == 2);
+                        map1->readEntries(br);//, halfToFull);
                         charMaps.insert(charMaps.end(), map1->entries->begin(), map1->entries->end());
                         map1Headers.push_back(map1);
+                        br->setPosition(map1->length + pos);
                         break;
                     }
                     case 0x57494431: //WID1
@@ -105,16 +109,20 @@ namespace NintyFont::DOL
                         wid1->readEntries(br);
                         charWidths.insert(charWidths.end(), wid1->entries->begin(), wid1->entries->end());
                         wid1Headers.push_back(wid1);
+                        br->setPosition(wid1->length + pos);
                         break;
                     }
                     case 0x494E4631: //INF1
                     {
                         inf1 = new Format::INF1(br);
+                        br->setPosition(inf1->length + pos);
                         break;
                     }
                     case 0x474C5931: //GLY1
                     {
-                        gly1Headers.push_back(new Format::GLY1(br));
+                        Format::GLY1 *gly1 = new Format::GLY1(br);
+                        gly1Headers.push_back(gly1);
+                        br->setPosition(gly1->length + pos);
                         break;
                     }
                     default:
@@ -127,6 +135,7 @@ namespace NintyFont::DOL
             //Read and decode sheets
             std::vector<QImage *> sheets(gly1Headers.size());
             std::vector<QPixmap*> charImgs(charMaps.size());
+            uint16_t counter = 0;
             for (uint16_t i = 0; i < gly1Headers.size(); i++)
             {
                 Format::GLY1 *hdr = gly1Headers.at(i);
@@ -140,18 +149,19 @@ namespace NintyFont::DOL
 
                 //Pull the sheet apart into individual glyph images
                 //by looping through all glyph cells.
-                for (uint32_t x = 0; x < hdr->cellsPerColumn; x++)
+                for (uint32_t y = 0; y < hdr->cellsPerColumn; y++)
                 {
-                    for (uint32_t y = 0; y < hdr->cellsPerRow; y++)
+                    for (uint32_t x = 0; x < hdr->cellsPerRow; x++)
                     {
-                        uint32_t startX = x * (hdr->cellWidth + 1);
-                        uint32_t startY = y * (hdr->cellHeight + 1);
+                        uint32_t startX = x * (hdr->cellWidth);
+                        uint32_t startY = y * (hdr->cellHeight);
                         //Initialize the QPixmap
                         QPixmap *charImg = new QPixmap();
                         //Copy pixels
                         charImg->convertFromImage(sheet->copy(QRect(startX, startY, hdr->cellWidth, hdr->cellHeight)));
+                        charImg->save(QString::fromStdString(fmt::format("bfn1_dec_cell_{}_{}x{}.png", i, x, y)), "PNG");
                         //Append Bitmap to list
-                        charImgs[i] = charImg;
+                        if (counter < charImgs.size()) charImgs[counter++] = charImg;
                     }
                 }
             }
@@ -170,10 +180,10 @@ namespace NintyFont::DOL
             {
                 std::vector<PropertyList::PropertyBase *> *props = new std::vector<PropertyList::PropertyBase *>
                 {
-                        new PropertyList::Property<uint16_t>((*glyphPropDescriptors)[0U], 0U),
+                        new PropertyList::Property<uint16_t>((*glyphPropDescriptors)[0U], charMaps[i]->index),
                         new PropertyList::Property<uint16_t>((*glyphPropDescriptors)[1U], charMaps[i]->code),
-                        new PropertyList::Property<int8_t>((*glyphPropDescriptors)[2U], charWidths[i]->left),
-                        new PropertyList::Property<uint8_t>((*glyphPropDescriptors)[3U], charWidths[i]->glyphWidth),
+                        new PropertyList::Property<int8_t>((*glyphPropDescriptors)[2U], charWidths[i]->w1),
+                        new PropertyList::Property<uint8_t>((*glyphPropDescriptors)[3U], charWidths[i]->w2),
                 };
                 glyphs[i] = new Glyph(props, charImgs[i]);
             }
@@ -253,6 +263,56 @@ namespace NintyFont::DOL
         //Width and map entries don't need to be deleted here, since dtors for their respective headers delete the entries already
     }
 
+    void JUTResFont::saveBinaryFont(std::string filePath)
+    {
+
+    }
+
+    std::vector<PropertyList::PropertyListEntryDescriptor *> *JUTResFont::getGlyphPropertyDescriptors()
+    {
+        return glyphPropDescriptors;
+    }
+
+    std::vector<PropertyList::PropertyBase *> *JUTResFont::getPropertiesList()
+    {
+        return fontProperties;
+    }
+
+    std::pair<uint32_t, uint32_t> JUTResFont::getGlyphImageSize()
+    {
+        return cellSize;
+    }
+
+    bool JUTResFont::canCreateCopyGlyphs()
+    {
+        return true;
+    }
+
+    bool JUTResFont::canDeleteGlyphs()
+    {
+        return true;
+    }
+
+    Glyph *JUTResFont::createEmptyGlyph(void)
+    {
+        return nullptr;
+    }
+
+    std::vector<PropertyList::PropertyBase *> *JUTResFont::getDrawablePropertiesList(void)
+    {
+        return drawableProperties;
+    }
+
+    void JUTResFont::drawDrawableProperties(QPainter *painter, uint32_t rows, uint32_t columns)
+    {
+
+    }
+
+    CharEncodings JUTResFont::getStdCharEncoding(void)
+    {
+        return ((PropertyList::Property<CharEncodings> *)(fontProperties->at(0)))->value;
+    }
+
     bool JUTResFont::identifyFile(uint8_t *bytes)
     {
         uint8_t magic[] = {0x46, 0x4F, 0x4E, 0x54, 0x62, 0x66, 0x6E, 0x31};
@@ -267,5 +327,10 @@ namespace NintyFont::DOL
     std::string JUTResFont::returnFileExtensionString()
     {
         return "*.bfn";
+    }
+
+    JUTResFont::~JUTResFont()
+    {
+
     }
 }

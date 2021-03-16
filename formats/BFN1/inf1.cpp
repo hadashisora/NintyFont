@@ -24,7 +24,8 @@ namespace NintyFont::DOL::Format
 
     void INF1::validateSignature()
     {
-
+        if (magic != 0x494E4631U) throw std::runtime_error("Invalid INF1 signature!!!");
+        else return;
     }
 
     void INF1::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker)

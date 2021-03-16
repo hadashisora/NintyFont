@@ -13,12 +13,14 @@
 #include "binarytools/binaryreader.h"
 #include "binarytools/binarywriter.h"
 #include "binarytools/blocklinker.h"
-#include "formats/NFTR/CWDH/charwidths.h"
+#include "wid1entry.h"
 
 namespace NintyFont::DOL::Format
 {
     class WID1
     {
+    private:
+        uint32_t entriesOffset; //Used to keep track of where to read the entries from, not in the actual data
     public:
         //Ctors
         WID1(BinaryTools::BinaryReader *br);
@@ -33,6 +35,6 @@ namespace NintyFont::DOL::Format
         uint32_t length;
         uint16_t startCode; //Code point of first character
         uint16_t endCode; //Code point of last character
-        std::vector<NTR::Format::CharWidths *> *entries;
+        std::vector<WID1Entry *> *entries;
     };
 }

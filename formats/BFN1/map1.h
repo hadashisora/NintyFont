@@ -28,14 +28,14 @@ namespace NintyFont::DOL::Format
         ~MAP1();
         //Methods
         virtual void validateSignature(void);
-        virtual void readEntries(BinaryTools::BinaryReader *br);
+        virtual void readEntries(BinaryTools::BinaryReader *br);//, bool halfToFull = false);
         virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker);
         //Fields
-        uint32_t magic;
-        uint32_t length;
-        uint16_t fontType; //Aka mapping method
-        uint16_t startCode;
-        uint16_t endCode;
+        uint32_t magic; //0x0
+        uint32_t length; //0x4
+        uint16_t mappingMethod; //0x8
+        uint16_t startCode; //0xA
+        uint16_t endCode; //0xC
         std::vector<NTR::Format::CMAPEntry *> *entries;
     };
 }

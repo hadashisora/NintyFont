@@ -17,7 +17,7 @@ namespace NintyFont::DOL::Format
         endCode = br->readUInt16();
         cellWidth = br->readUInt16();
         cellHeight = br->readUInt16();
-        sheetSize = br->readUInt16();
+        sheetSize = br->readUInt32();
         sheetFormat = br->readUInt16();
         cellsPerRow = br->readUInt16();
         cellsPerColumn = br->readUInt16();
@@ -29,12 +29,29 @@ namespace NintyFont::DOL::Format
 
     void GLY1::validateSignature()
     {
-
+        if (magic != 0x474C5931U) throw std::runtime_error("Invalid GLY1 signature!!!");
+        else return;
     }
 
     void GLY1::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker)
     {
-
+        linker->incLookupValue("blockCount", 1);
+        bw->write(magic);
+        linker->addPatchAddr(bw->getPosition(), "glyphLength");
+        bw->write(length);
+        bw->write(startCode);
+        bw->write(endCode);
+        bw->write(cellWidth);
+        bw->write(cellHeight);
+        bw->write(sheetSize);
+        bw->write(sheetFormat);
+        bw->write(cellsPerRow);
+        bw->write(cellsPerColumn);
+        bw->write(sheetWidth);
+        bw->write(sheetHeight);
+        bw->write((uint16_t)0x0000);
+        linker->addPatchAddr(bw->getPosition(), "sheetPtr");
+        bw->write(sheetOffset);
     }
 
     GLY1::~GLY1()
