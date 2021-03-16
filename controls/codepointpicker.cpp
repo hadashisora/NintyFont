@@ -124,8 +124,30 @@ namespace NintyFont::GUI::Controls
 
     void CodePointPicker::updateGlyphNameLabels(uint16_t code)
     {
+        switch (globals->font->getStdCharEncoding())
+        {
+        case CharEncodings::UTF8:
+        case CharEncodings::UTF16:
+        case CharEncodings::CP1252:
+            break;
+        case CharEncodings::ShiftJIS:
+            try 
+            {
+                code = globals->sjis->codeToUTF16(code);
+            }
+            catch (std::runtime_error)
+            {
+                glyphLabel->setText("");
+                glyphNameLabel->setText("");
+                return;
+            }
+            break;
+        case CharEncodings::Num:
+            return;
+        }
         const uint16_t chr[] = {code, 0x0000};
         glyphLabel->setText(QString::fromUtf16(chr));
+        auto test = globals->unicode->getCharNameFromUnicodeCodepoint(code);
         glyphNameLabel->setText(QString::fromStdString(globals->unicode->getCharNameFromUnicodeCodepoint(code)));
     }
 

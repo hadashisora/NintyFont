@@ -559,6 +559,11 @@ namespace NintyFont::RVL
         }
     }
 
+    CharEncodings BinaryRevolutionFont::getStdCharEncoding(void)
+    {
+        return (CharEncodings)NTR::Format::getFontCharEncoding(fontProperties);
+    }
+
     bool BinaryRevolutionFont::identifyFile(uint8_t *bytes)
     {
         uint8_t magicBE[] = {0x52, 0x46, 0x4E, 0x54};

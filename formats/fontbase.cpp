@@ -49,6 +49,11 @@ namespace NintyFont
         throw std::runtime_error("Don't call the base version of createEmptyGlyph!");
     }
 
+    CharEncodings FontBase::getStdCharEncoding(void)
+    {
+        throw std::runtime_error("Don't call the base version of getStdCharEncoding!");
+    }
+
     std::string FontBase::getImageFormatString(ImageFormats format)
     {
         std::string str = "";

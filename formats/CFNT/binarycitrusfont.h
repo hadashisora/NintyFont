@@ -43,6 +43,7 @@ namespace NintyFont::CTR
         Glyph *createEmptyGlyph(void) override;
         std::vector<PropertyList::PropertyBase *> * getDrawablePropertiesList(void) override;
         void drawDrawableProperties(QPainter *painter, uint32_t rows, uint32_t columns) override;
+        CharEncodings getStdCharEncoding(void) override;
         static bool identifyFile(uint8_t *bytes);
         static std::string returnFileTypeString(void);
         static std::string returnFileExtensionString(void);

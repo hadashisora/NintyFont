@@ -75,6 +75,7 @@ namespace NintyFont
         virtual Glyph *createEmptyGlyph(void);
         virtual std::string getImageFormatString(ImageFormats format);
         virtual std::string getCharEncodingString(CharEncodings format);
+        virtual CharEncodings getStdCharEncoding(void);
         virtual void drawDrawableProperties(QPainter *painter, uint32_t rows, uint32_t columns);
         //Destructor
         virtual ~FontBase();

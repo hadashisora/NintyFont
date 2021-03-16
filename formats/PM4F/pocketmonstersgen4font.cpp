@@ -223,6 +223,11 @@ namespace NintyFont::NTR::PM4
 
     }
 
+    CharEncodings PocketMonstersGen4Font::getStdCharEncoding(void)
+    {
+        return CharEncodings::Num;
+    }
+
     bool PocketMonstersGen4Font::identifyFile(uint8_t *bytes)
     {
         uint8_t magic[] = {0x10, 0x00, 0x00, 0x00};

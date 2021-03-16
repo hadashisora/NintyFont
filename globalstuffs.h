@@ -12,6 +12,7 @@
 #include "formats/fontbase.h"
 #include "viewwidget.h"
 #include "unicodenames.h"
+#include "sjisconv.h"
 
 namespace NintyFont
 {
@@ -26,6 +27,7 @@ namespace NintyFont
         NintyFont::GUI::ViewWidget *view;
         QGraphicsScene *fontView;
         UnicodeNames *unicode;
+        SJISConv *sjis;
         float zoom;
     };
 }

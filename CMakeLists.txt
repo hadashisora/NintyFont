@@ -100,6 +100,8 @@ add_executable(${PROJECT_NAME}
     qhexspinbox.h
     unicodenames.cpp
     unicodenames.h
+    sjisconv.cpp
+    sjisconv.h
     propertylist.cpp
     propertylist.h
     charproppanel.cpp
@@ -122,10 +124,11 @@ add_executable(${PROJECT_NAME}
     )
 
 configure_file("DerivedName.txt" "DerivedName.txt" COPYONLY)
+configure_file("SHIFTJIS.TXT" "SHIFTJIS.TXT" COPYONLY)
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE FALSE)
 #It's no use...Qt5 forces -fPIC no matter what, since the Ubuntu apt packages
-#for it are compiled with "-reduce-relocations" flag [resumably forcing use of PIC.
+#for it are compiled with "-reduce-relocations" flag presumably forcing use of PIC.
 #This has a side effect that this program can't be launched by double clicking
 #the file in Nemo/Nautilus, since the mime type of PIE is of shared library...
 #Still beats me as to why this hasn't been fixed yet...

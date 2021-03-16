@@ -555,6 +555,11 @@ namespace NintyFont::CTR
         }
     }
 
+    CharEncodings BinaryCitrusFont::getStdCharEncoding(void)
+    {
+        return (CharEncodings)NTR::Format::getFontCharEncoding(fontProperties);
+    }
+
     bool BinaryCitrusFont::identifyFile(uint8_t *bytes)
     {
         uint8_t magicBE[] = {0x43, 0x46, 0x4E, 0x54}; //Although this says BE, it's LE since they though magic signatures shouldn't be backwards on LE systems

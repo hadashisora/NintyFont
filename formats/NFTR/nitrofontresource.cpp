@@ -485,6 +485,11 @@ namespace NintyFont::NTR
 
     }
 
+    CharEncodings NitroFontResource::getStdCharEncoding(void)
+    {
+        return (CharEncodings)NTR::Format::getFontCharEncoding(fontProperties);
+    }
+
     bool NitroFontResource::identifyFile(uint8_t *bytes)
     {
         uint8_t magicBE[] = {0x4E, 0x46, 0x54, 0x52}; //In case this somehow exists. Technically it's possible, practically - I dunno

@@ -81,4 +81,9 @@ namespace NintyFont
         }
         return result;
     }
+
+    UnicodeNames::~UnicodeNames()
+    {
+        
+    }
 }

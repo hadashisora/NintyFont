@@ -22,7 +22,11 @@ namespace NintyFont
     private:
         std::map<uint32_t, std::string> nameLookUpTable;
     public:
+        //Ctor
         UnicodeNames(std::string derivedNamePath = "DerivedName.txt");
+        //Dtor
+        ~UnicodeNames();
+        //Methods
         std::string getCharNameFromUnicodeCodepoint(uint32_t codePoint);
     };
 }

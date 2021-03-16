@@ -30,6 +30,7 @@ namespace NintyFont::GUI
         globals->zoom = 100;
 
         globals->unicode = new UnicodeNames(); //Load the Unicode character names from DerivedName.txt (from ftp://ftp.unicode.org/Public/UNIDATA/UCD.zip)
+        globals->sjis = new SJISConv();
 
         globals->fontView = new QGraphicsScene();
         globals->view = new ViewWidget(globals);
@@ -655,6 +656,8 @@ namespace NintyFont::GUI
         delete globals->font;
         delete globals->view;
         delete globals->fontView;
+        delete globals->unicode;
+        delete globals->sjis;
         delete fontInfo;
         delete charProps;
         delete textPreview;
@@ -665,7 +668,6 @@ namespace NintyFont::GUI
         delete windowToggleFontInfoAction;
         delete windowTogglePreviewAction;
         delete zoomResetBtn;
-        delete globals->unicode;
     }
 }
 
