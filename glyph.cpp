@@ -43,10 +43,10 @@ namespace NintyFont
 
     void Glyph::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     {
-        QMenu* menu = new QMenu();
-        QAction* actImport = new QAction("Import", this);
+        QMenu *menu = new QMenu();
+        QAction *actImport = new QAction("Import", this);
         connect(actImport, &QAction::triggered, this, &Glyph::importEvent);
-        QAction* actExport = new QAction("Export", this);
+        QAction *actExport = new QAction("Export", this);
         connect(actExport, &QAction::triggered, this, &Glyph::exportEvent);
         menu->addAction(actImport);
         menu->addAction(actExport);
@@ -80,11 +80,12 @@ namespace NintyFont
         filePath = dlg.selectedFiles()[0];
 
         //Save file as PNG
-        QPixmap* pix = new QPixmap(filePath);
+        QPixmap *pix = new QPixmap(filePath);
         if (pix->width() != pixmap->width() || pix->height() != pixmap->height())
         {
-            QErrorMessage dialog = QErrorMessage();
-            dialog.showMessage("The size of the provided image file does not match the size of the glyph! Aborting loading!");
+            QMessageBox dialog = QMessageBox(QMessageBox::Icon::Critical, "Error", "The size of the provided image file does not match the size of the glyph! Aborting loading!", QMessageBox::StandardButton::Discard);
+            dialog.exec();
+            delete pix;
             return;
         }
         delete pixmap;
@@ -92,7 +93,7 @@ namespace NintyFont
         update();
     }
 
-    void Glyph::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+    void Glyph::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
     {
         painter->drawPixmap(0, 0, *pixmap);
 
