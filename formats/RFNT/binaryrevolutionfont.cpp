@@ -179,7 +179,7 @@ namespace NintyFont::RVL
                 //Initialize the QPixmap
                 QPixmap *charImg = new QPixmap();
                 //Copy pixels
-                charImg->convertFromImage(sheets.at(currentSheet)->copy(QRect(startX, startY, (tglp->cellWidth + 1), (tglp->cellHeight + 1))));
+                charImg->convertFromImage(sheets.at(currentSheet)->copy(QRect(startX, startY, tglp->cellWidth, tglp->cellHeight)));
                 //Append Bitmap to list
                 charImgs.push_back(charImg);
             }
@@ -311,9 +311,10 @@ namespace NintyFont::RVL
         uint32_t cellsPerSheet = cellsPerRow * cellsPerColumn;
         uint32_t numSheets = (uint32_t)(std::ceil((double)encodedGlyphs.size() / (double)cellsPerSheet));
         std::vector<QImage *> sheetImgs(numSheets);
-        for (uint32_t i = 0; i < encodedGlyphs.size(); i++)
+        for (auto c = encodedGlyphs.begin(); c != encodedGlyphs.end(); c++)
         {
             //Do some math to figure out where we should start plotting the pixels
+            uint32_t i = NTR::Format::getGlyphIndex((*c)->props);
             uint32_t currentSheet = i / (cellsPerRow * cellsPerColumn);
             uint32_t i2 = i - (currentSheet * cellsPerRow * cellsPerColumn);
             uint32_t currentRow = i2 / cellsPerRow;
@@ -328,7 +329,7 @@ namespace NintyFont::RVL
             }
             //Plot glyph image onto the sheet
             QPainter paint = QPainter(sheetImgs[currentSheet]);
-            paint.drawPixmap(startX, startY, *glyphs[i]->pixmap);
+            paint.drawPixmap(startX, startY, *(*c)->pixmap);
         }
         //Encode the images
         std::vector<std::vector<uint8_t> *> sheets(numSheets);
