@@ -47,6 +47,8 @@ namespace NintyFont::GUI
         layout = nullptr;
         addBtn = nullptr;
         deleteBtn = nullptr;
+        emptyGlyph = new QPixmap(128, 128);
+        emptyGlyph->fill(Qt::transparent);
 
         connect(globals->fontView, &QGraphicsScene::selectionChanged, this, &CharPropPanel::updateOnSelectionChanged);
         setWindowTitle("Glyph properties");
@@ -84,7 +86,7 @@ namespace NintyFont::GUI
         {
             propList = nullptr;
             lockControls();
-            glyphPixmapView->setPixmap(QPixmap(128, 128));
+            glyphPixmapView->setPixmap(*emptyGlyph);
         }
     }
 

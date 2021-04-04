@@ -39,6 +39,7 @@ namespace NintyFont::GUI
         QPushButton *importBtn;
         QPushButton *exportBtn;
         QLabel *glyphPixmapView;
+        QPixmap *emptyGlyph;
         //Event handling
         void addEvent(void);
         void deleteEvent(void);
