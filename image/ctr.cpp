@@ -16,63 +16,63 @@ namespace NintyFont::CTR::Image
     {
         switch (texFmt)
         {
-            case (uint8_t)CtrTexFormat::RGBA8888:
+            case (uint8_t)PicaTexFormat::RGBA8888:
                 return decodeRGBA8888(br, width, height);
-            case (uint8_t)CtrTexFormat::RGB888:
+            case (uint8_t)PicaTexFormat::RGB888:
                 return decodeRGB888(br, width, height);
-            case (uint8_t)CtrTexFormat::RGBA5551:
+            case (uint8_t)PicaTexFormat::RGBA5551:
                 return decodeRGBA5551(br, width, height);
-            case (uint8_t)CtrTexFormat::RGB565:
+            case (uint8_t)PicaTexFormat::RGB565:
                 return decodeRGB565(br, width, height);
-            case (uint8_t)CtrTexFormat::RGBA4444:
+            case (uint8_t)PicaTexFormat::RGBA4444:
                 return decodeRGBA4444(br, width, height);
-            case (uint8_t)CtrTexFormat::LA88:
+            case (uint8_t)PicaTexFormat::LA88:
                 return decodeLA88(br, width, height);
-            case (uint8_t)CtrTexFormat::A8:
+            case (uint8_t)PicaTexFormat::A8:
                 return decodeA8(br, width, height);
-            case (uint8_t)CtrTexFormat::LA44:
+            case (uint8_t)PicaTexFormat::LA44:
                 return decodeLA44(br, width, height);
-            case (uint8_t)CtrTexFormat::A4:
+            case (uint8_t)PicaTexFormat::A4:
                 return decodeA4(br, width, height);
-            case (uint8_t)CtrTexFormat::L4: //Fall all these through to unimplemented, since these aren't used in BCFNT
-            case (uint8_t)CtrTexFormat::HL8:
-            case (uint8_t)CtrTexFormat::L8:
-            case (uint8_t)CtrTexFormat::ETC1:
-            case (uint8_t)CtrTexFormat::ETC1A4:
+            case (uint8_t)PicaTexFormat::L4: //Fall all these through to unimplemented, since these aren't used in BCFNT
+            case (uint8_t)PicaTexFormat::HL8:
+            case (uint8_t)PicaTexFormat::L8:
+            case (uint8_t)PicaTexFormat::ETC1:
+            case (uint8_t)PicaTexFormat::ETC1A4:
             default:
                 throw std::runtime_error("Unimplemented CTR texture format!");
                 //return nullptr;
         }
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height)
     {
         switch (texFmt)
         {
-            case (uint8_t)CtrTexFormat::RGBA8888:
+            case (uint8_t)PicaTexFormat::RGBA8888:
                 return encodeRGBA8888(data, width, height);
-            case (uint8_t)CtrTexFormat::RGB888:
+            case (uint8_t)PicaTexFormat::RGB888:
                 return encodeRGB888(data, width, height);
-            case (uint8_t)CtrTexFormat::RGBA5551:
+            case (uint8_t)PicaTexFormat::RGBA5551:
                 return encodeRGBA5551(data, width, height);
-            case (uint8_t)CtrTexFormat::RGB565:
+            case (uint8_t)PicaTexFormat::RGB565:
                 return encodeRGB565(data, width, height);
-            case (uint8_t)CtrTexFormat::RGBA4444:
+            case (uint8_t)PicaTexFormat::RGBA4444:
                 return encodeRGBA4444(data, width, height);
-            case (uint8_t)CtrTexFormat::LA88:
+            case (uint8_t)PicaTexFormat::LA88:
                 return encodeLA88(data, width, height);
-            case (uint8_t)CtrTexFormat::A8:
+            case (uint8_t)PicaTexFormat::A8:
                 return encodeA8(data, width, height);
-            case (uint8_t)CtrTexFormat::LA44:
+            case (uint8_t)PicaTexFormat::LA44:
                 return encodeLA44(data, width, height);
-            case (uint8_t)CtrTexFormat::A4:
+            case (uint8_t)PicaTexFormat::A4:
                 return encodeA4(data, width, height);
             //Leaving the rest of the texture formats to throw an unimplemented, since they aren't used in BCFNT
-            case (uint8_t)CtrTexFormat::L4:
-            case (uint8_t)CtrTexFormat::HL8:
-            case (uint8_t)CtrTexFormat::L8:
-            case (uint8_t)CtrTexFormat::ETC1:
-            case (uint8_t)CtrTexFormat::ETC1A4:
+            case (uint8_t)PicaTexFormat::L4:
+            case (uint8_t)PicaTexFormat::HL8:
+            case (uint8_t)PicaTexFormat::L8:
+            case (uint8_t)PicaTexFormat::ETC1:
+            case (uint8_t)PicaTexFormat::ETC1A4:
             default:
                 throw std::runtime_error("Unimplemented CTR texture format!");
                 //return nullptr;
@@ -83,33 +83,33 @@ namespace NintyFont::CTR::Image
     {
         switch (texFmt)
         {
-            case (uint8_t)CtrTexFormat::RGBA8888:
+            case (uint8_t)PicaTexFormat::RGBA8888:
                 return (uint8_t)ImageFormats::RGBA8;
-            case (uint8_t)CtrTexFormat::RGB888:
+            case (uint8_t)PicaTexFormat::RGB888:
                 return (uint8_t)ImageFormats::RGB8;
-            case (uint8_t)CtrTexFormat::RGBA5551:
+            case (uint8_t)PicaTexFormat::RGBA5551:
                 return (uint8_t)ImageFormats::RGB5A1;
-            case (uint8_t)CtrTexFormat::RGB565:
+            case (uint8_t)PicaTexFormat::RGB565:
                 return (uint8_t)ImageFormats::RGB565;
-            case (uint8_t)CtrTexFormat::RGBA4444:
+            case (uint8_t)PicaTexFormat::RGBA4444:
                 return (uint8_t)ImageFormats::RGBA4;;
-            case (uint8_t)CtrTexFormat::LA88:
+            case (uint8_t)PicaTexFormat::LA88:
                 return (uint8_t)ImageFormats::L8A;
-            case (uint8_t)CtrTexFormat::HL8:
+            case (uint8_t)PicaTexFormat::HL8:
                 return (uint8_t)ImageFormats::HL8;
-            case (uint8_t)CtrTexFormat::L8:
+            case (uint8_t)PicaTexFormat::L8:
                 return (uint8_t)ImageFormats::L8;
-            case (uint8_t)CtrTexFormat::A8:
+            case (uint8_t)PicaTexFormat::A8:
                 return (uint8_t)ImageFormats::A8;
-            case (uint8_t)CtrTexFormat::LA44:
+            case (uint8_t)PicaTexFormat::LA44:
                 return (uint8_t)ImageFormats::L4A;
-            case (uint8_t)CtrTexFormat::L4:
+            case (uint8_t)PicaTexFormat::L4:
                 return (uint8_t)ImageFormats::L4;
-            case (uint8_t)CtrTexFormat::A4:
+            case (uint8_t)PicaTexFormat::A4:
                 return (uint8_t)ImageFormats::A4;
-            case (uint8_t)CtrTexFormat::ETC1:
+            case (uint8_t)PicaTexFormat::ETC1:
                 return (uint8_t)ImageFormats::ETC1;
-            case (uint8_t)CtrTexFormat::ETC1A4:
+            case (uint8_t)PicaTexFormat::ETC1A4:
                 return (uint8_t)ImageFormats::ETC1A4;
             default:
                 throw std::runtime_error("Unsupported CTR texture format!");
@@ -122,35 +122,35 @@ namespace NintyFont::CTR::Image
         switch (generalFmt)
         {
             case (uint8_t)ImageFormats::RGBA8:
-                return (uint8_t)CtrTexFormat::RGBA8888;
+                return (uint8_t)PicaTexFormat::RGBA8888;
             case (uint8_t)ImageFormats::RGB8:
-                return (uint8_t)CtrTexFormat::RGB888;
+                return (uint8_t)PicaTexFormat::RGB888;
             case (uint8_t)ImageFormats::RGB5A1:
-                return (uint8_t)CtrTexFormat::RGBA5551;
+                return (uint8_t)PicaTexFormat::RGBA5551;
             case (uint8_t)ImageFormats::RGB565:
-                return (uint8_t)CtrTexFormat::RGB565;
+                return (uint8_t)PicaTexFormat::RGB565;
             case (uint8_t)ImageFormats::RGBA4:
-                return (uint8_t)CtrTexFormat::RGBA4444;
+                return (uint8_t)PicaTexFormat::RGBA4444;
             case (uint8_t)ImageFormats::L8A:
-                return (uint8_t)CtrTexFormat::LA88;
+                return (uint8_t)PicaTexFormat::LA88;
             case (uint8_t)ImageFormats::HL8:
-                return (uint8_t)CtrTexFormat::HL8;
+                return (uint8_t)PicaTexFormat::HL8;
             case (uint8_t)ImageFormats::L8:
-                return (uint8_t)CtrTexFormat::L8;
+                return (uint8_t)PicaTexFormat::L8;
             case (uint8_t)ImageFormats::A8:
-                return (uint8_t)CtrTexFormat::A8;
+                return (uint8_t)PicaTexFormat::A8;
             case (uint8_t)ImageFormats::L4A:
-                return (uint8_t)CtrTexFormat::LA44;
+                return (uint8_t)PicaTexFormat::LA44;
             case (uint8_t)ImageFormats::L4:
-                return (uint8_t)CtrTexFormat::L4;
+                return (uint8_t)PicaTexFormat::L4;
             case (uint8_t)ImageFormats::A4:
-                return (uint8_t)CtrTexFormat::A4;
+                return (uint8_t)PicaTexFormat::A4;
             case (uint8_t)ImageFormats::ETC1:
-                return (uint8_t)CtrTexFormat::ETC1;
+                return (uint8_t)PicaTexFormat::ETC1;
             case (uint8_t)ImageFormats::ETC1A4:
-                return (uint8_t)CtrTexFormat::ETC1A4;
+                return (uint8_t)PicaTexFormat::ETC1A4;
             default:
-                return (uint8_t)CtrTexFormat::RGBA8888; //In case it's something unknown, default to RGBA8
+                return (uint8_t)PicaTexFormat::RGBA8888; //In case it's something unknown, default to RGBA8
         }
     }
 
@@ -389,9 +389,10 @@ namespace NintyFont::CTR::Image
         return argbBuf;
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGBA8888(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGBA8888(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 4);
+        uint32_t size = width * height * 4;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
@@ -408,19 +409,20 @@ namespace NintyFont::CTR::Image
                     uint8_t red = argbBuf[outputOffset + 2];
                     uint8_t alpha = argbBuf[outputOffset + 3];
 
-                    rgbBuf->at(i++) = alpha; //For some reason I forgot you could do i++ in there too, a la GB assembler "ld [hli], a"
-                    rgbBuf->at(i++) = red;
-                    rgbBuf->at(i++) = green;
-                    rgbBuf->at(i++) = blue;
+                    rgbBuf[i++] = alpha; //For some reason I forgot you could do i++ in there too, a la GB assembler "ld [hli], a"
+                    rgbBuf[i++] = red;
+                    rgbBuf[i++] = green;
+                    rgbBuf[i++] = blue;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGB888(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGB888(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 3);
+        uint32_t size = width * height * 3;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
@@ -438,18 +440,19 @@ namespace NintyFont::CTR::Image
                     uint8_t alpha = argbBuf[outputOffset + 3];
                     float floatAlpha = (float)alpha / 255.0F;
 
-                    rgbBuf->at(i++) = (uint8_t)round((float)red * floatAlpha);
-                    rgbBuf->at(i++) = (uint8_t)round((float)green * floatAlpha);
-                    rgbBuf->at(i++) = (uint8_t)round((float)blue * floatAlpha);
+                    rgbBuf[i++] = (uint8_t)round((float)red * floatAlpha);
+                    rgbBuf[i++] = (uint8_t)round((float)green * floatAlpha);
+                    rgbBuf[i++] = (uint8_t)round((float)blue * floatAlpha);
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGBA5551(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGBA5551(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F); //conversion coefficient, but in a math expression so it's better understood where it comes from
         for (uint16_t tY = 0; tY < height / 8; tY++)
@@ -474,17 +477,18 @@ namespace NintyFont::CTR::Image
 
                     uint16_t newpixel = (uint16_t)newpixelA | ((uint16_t)newpixelR << 1) | ((uint16_t)newpixelG << 6) | ((uint16_t)newpixelB << 11);
 
-                    rgbBuf->at(i++) = newpixel & 0xFF;
-                    rgbBuf->at(i++) = newpixel >> 8;
+                    rgbBuf[i++] = newpixel & 0xFF;
+                    rgbBuf[i++] = newpixel >> 8;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         const float convRB = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F);
         const float convG = ((float)(1 << 8) - 1.0F) / ((float)(1 << 6) - 1.0F);
@@ -511,17 +515,18 @@ namespace NintyFont::CTR::Image
 
                     uint16_t newpixel = (uint16_t)newpixelR | ((uint16_t)newpixelG << 5) | ((uint16_t)newpixelB << 11);
 
-                    rgbBuf->at(i++) = newpixel & 0xFF;
-                    rgbBuf->at(i++) = newpixel >> 8;
+                    rgbBuf[i++] = newpixel & 0xFF;
+                    rgbBuf[i++] = newpixel >> 8;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGBA4444(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGBA4444(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
         for (uint16_t tY = 0; tY < height / 8; tY++)
@@ -546,17 +551,18 @@ namespace NintyFont::CTR::Image
                     
                     uint16_t newpixel = (uint16_t)alpha | ((uint16_t)newpixelR << 4) | ((uint16_t)newpixelG << 8) | ((uint16_t)newpixelB << 12);
 
-                    rgbBuf->at(i++) = newpixel & 0xFF;
-                    rgbBuf->at(i++) = newpixel >> 8;
+                    rgbBuf[i++] = newpixel & 0xFF;
+                    rgbBuf[i++] = newpixel >> 8;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeLA88(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeLA88(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
@@ -575,17 +581,18 @@ namespace NintyFont::CTR::Image
 
                     uint8_t newpixel = (uint8_t)round(((float)blue + (float)green + (float)red) / 3.0F);
 
-                    rgbBuf->at(i++) = newpixel;
-                    rgbBuf->at(i++) = alpha;
+                    rgbBuf[i++] = newpixel;
+                    rgbBuf[i++] = alpha;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height);
+        uint32_t size = width * height;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
@@ -604,16 +611,17 @@ namespace NintyFont::CTR::Image
 
                     uint8_t newpixel = (uint8_t)round((((float)blue + (float)green + (float)red) / 3.0F) * ((float)alpha / 255.0F));
 
-                    rgbBuf->at(i++) = newpixel;
+                    rgbBuf[i++] = newpixel;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeLA44(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeLA44(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height);
+        uint32_t size = width * height;
+        uint8_t *rgbBuf = new uint8_t[size];
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
@@ -634,16 +642,17 @@ namespace NintyFont::CTR::Image
                     uint8_t newpixel = (uint8_t)round((((float)blue + (float)green + (float)red) / 3.0F) / conv);
                     uint8_t newalpha = (uint8_t)round((float)alpha / conv);
 
-                    rgbBuf->at(i++) = newpixel | (newalpha << 4);
+                    rgbBuf[i++] = newpixel | (newalpha << 4);
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeA4(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeA4(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>((width * height) / 2);
+        uint32_t size = (width * height) / 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
@@ -670,10 +679,10 @@ namespace NintyFont::CTR::Image
 
                     newpixel |= ((uint8_t)round(((((float)blue + (float)green + (float)red) / 3.0F) * ((float)alpha / 255.0F)) / conv) << 4);
 
-                    rgbBuf->at(i++) = newpixel;
+                    rgbBuf[i++] = newpixel;
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 }

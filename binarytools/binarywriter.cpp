@@ -69,10 +69,11 @@ namespace BinaryTools
 
     void BinaryWriter::write(uint8_t *buffer, int32_t index, int32_t count)
     {
-        for (int32_t i = index; i < index + count; i++)
-        {
-            std::ofstream::put(buffer[i]);
-        }
+        // for (int32_t i = index; i < index + count; i++)
+        // {
+        //     std::ofstream::put(buffer[i]);
+        // }
+        std::ofstream::write((const char *)(buffer + index), count);
     }
 
     void BinaryWriter::write(std::vector<uint8_t> *data)

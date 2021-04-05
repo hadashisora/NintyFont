@@ -328,7 +328,7 @@ namespace NintyFont::CTR
             paint.drawPixmap(startX, startY, *(*c)->pixmap);
         }
         //Encode the images
-        std::vector<std::vector<uint8_t> *> sheets(numSheets);
+        std::vector<util::array<uint8_t>> sheets(numSheets);
         for (uint32_t i = 0; i < sheetImgs.size(); i++)
         {
             //sheetImgs[i]->save(QString::fromStdString(fmt::format("enc_sheet_{}.png", i)), "PNG"); //Debug thingy to test the splicer output
@@ -354,7 +354,7 @@ namespace NintyFont::CTR
                                                    widthEntries->at(0)->copy()/*Also hardcoded to those of the first glyph*/,
                                                    NTR::Format::getFontCharEncoding(fontProperties), NTR::Format::getFontHeight(fontProperties),
                                                    NTR::Format::getFontWidth(fontProperties), NTR::Format::getFontAscent(fontProperties), 0x464E4946U);
-        RVL::Format::TGLP tglp = RVL::Format::TGLP(cellSize.first, cellSize.second, NTR::Format::getFontBaseline(fontProperties), maxCharWidth, sheets[0]->size(),
+        RVL::Format::TGLP tglp = RVL::Format::TGLP(cellSize.first, cellSize.second, NTR::Format::getFontBaseline(fontProperties), maxCharWidth, sheets[0].size,
                 sheets.size(), Image::TextureCodec::returnPlatformTextureType(RVL::Format::getRvlFontImageFormat(fontProperties)),
                 cellsPerRow, cellsPerColumn, sheetSize.first, sheetSize.second, 0x504C4754U);
 
@@ -402,7 +402,7 @@ namespace NintyFont::CTR
         }
         for (auto entry = sheets.begin(); entry != sheets.end(); entry++)
         {
-            delete *entry;
+            delete (*entry).arr;
         }
         for (auto entry = cwdhHeaders.begin(); entry != cwdhHeaders.end(); entry++)
         {

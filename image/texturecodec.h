@@ -19,6 +19,7 @@
 #include "binarytools/binaryreader.h"
 #include "binarytools/bitreader.h"
 #include "formats/fontbase.h"
+#include "sizedarray.h"
 
 namespace NintyFont::NTR::Image
 {
@@ -36,7 +37,7 @@ namespace NintyFont::RVL::Image
     {
     public:
         static uint8_t *decodeTexture(uint8_t texFmt, BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height);
         static uint8_t returnGeneralTextureType(uint8_t texFmt);
         static uint8_t returnPlatformTextureType(uint8_t generalFmt);
         static uint8_t *decodeI4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
@@ -46,14 +47,14 @@ namespace NintyFont::RVL::Image
         static uint8_t *decodeRGB565(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeRGB5A3(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeRGBA8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeI4(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeI8(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeIA4(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeIA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGB5A3(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGBA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        enum class DolRvlTexFmts : uint8_t
+        static util::array<uint8_t> encodeI4(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeI8(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeIA4(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeIA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGB5A3(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGBA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        enum class GXTexFormat : uint8_t
         {
             I4 = 0x0,
             I8 = 0x1,
@@ -76,7 +77,7 @@ namespace NintyFont::CTR::Image
     {
     public:
         static uint8_t *decodeTexture(uint8_t texFmt, BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height);
         static uint8_t returnGeneralTextureType(uint8_t texFmt);
         static uint8_t returnPlatformTextureType(uint8_t generalFmt);
         static uint8_t *decodeRGBA8888(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
@@ -85,24 +86,19 @@ namespace NintyFont::CTR::Image
         static uint8_t *decodeRGB565(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeRGBA4444(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeLA88(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        //static uint8_t *decodeHL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        //static uint8_t *decodeL8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeA8(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeLA44(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        //static uint8_t *decodeL4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
         static uint8_t *decodeA4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        //static uint8_t *decodeETC1(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        //static uint8_t *decodeETC1A4(BinaryTools::BinaryReader *br, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGBA8888(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGB888(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGBA5551(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeRGBA4444(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeLA88(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeLA44(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        static std::vector<uint8_t> *encodeA4(uint8_t *argbBuf, uint16_t width, uint16_t height);
-        enum class CtrTexFormat : uint8_t
+        static util::array<uint8_t> encodeRGBA8888(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGB888(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGBA5551(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeRGBA4444(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeLA88(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeA8(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeLA44(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        static util::array<uint8_t> encodeA4(uint8_t *argbBuf, uint16_t width, uint16_t height);
+        enum class PicaTexFormat : uint8_t
         {
             RGBA8888 = 0,
             RGB888 = 1,

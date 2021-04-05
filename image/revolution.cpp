@@ -16,23 +16,23 @@ namespace NintyFont::RVL::Image
     {
         switch (texFmt)
         {
-            case (uint8_t)DolRvlTexFmts::I4:
+            case (uint8_t)GXTexFormat::I4:
                 return decodeI4(br, width, height);
-            case (uint8_t)DolRvlTexFmts::I8:
+            case (uint8_t)GXTexFormat::I8:
                 return decodeI8(br, width, height);
-            case (uint8_t)DolRvlTexFmts::IA4:
+            case (uint8_t)GXTexFormat::IA4:
                 return decodeIA4(br, width, height);
-            case (uint8_t)DolRvlTexFmts::IA8:
+            case (uint8_t)GXTexFormat::IA8:
                 return decodeIA8(br, width, height);
-            case (uint8_t)DolRvlTexFmts::RGB565:
+            case (uint8_t)GXTexFormat::RGB565:
                 return decodeRGB565(br, width, height);
-            case (uint8_t)DolRvlTexFmts::RGB5A3:
+            case (uint8_t)GXTexFormat::RGB5A3:
                 return decodeRGB5A3(br, width, height);
-            case (uint8_t)DolRvlTexFmts::RGBA8:
+            case (uint8_t)GXTexFormat::RGBA8:
                 return decodeRGBA8(br, width, height);
-            case (uint8_t)DolRvlTexFmts::C4: //Intentional fall-through to unimplemented message for all items below
-            case (uint8_t)DolRvlTexFmts::C8:
-            case (uint8_t)DolRvlTexFmts::CMPR:
+            case (uint8_t)GXTexFormat::C4: //Intentional fall-through to unimplemented message for all items below
+            case (uint8_t)GXTexFormat::C8:
+            case (uint8_t)GXTexFormat::CMPR:
                 throw std::runtime_error("Unimplemented RVL texture format!");
                 break;
             default:
@@ -40,31 +40,31 @@ namespace NintyFont::RVL::Image
         }
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeTexture(uint8_t texFmt, uint8_t *data, uint16_t width, uint16_t height)
     {
         switch (texFmt)
         {
-            case (uint8_t)DolRvlTexFmts::I4:
+            case (uint8_t)GXTexFormat::I4:
                 return encodeI4(data, width, height);
-            case (uint8_t)DolRvlTexFmts::I8:
+            case (uint8_t)GXTexFormat::I8:
                 return encodeI8(data, width, height);
-            case (uint8_t)DolRvlTexFmts::IA4:
+            case (uint8_t)GXTexFormat::IA4:
                 return encodeIA4(data, width, height);
-            case (uint8_t)DolRvlTexFmts::IA8:
+            case (uint8_t)GXTexFormat::IA8:
                 return encodeIA8(data, width, height);
-            case (uint8_t)DolRvlTexFmts::RGB565:
+            case (uint8_t)GXTexFormat::RGB565:
                 return encodeRGB565(data, width, height);
-            case (uint8_t)DolRvlTexFmts::RGB5A3:
+            case (uint8_t)GXTexFormat::RGB5A3:
                 return encodeRGB5A3(data, width, height);
-            case (uint8_t)DolRvlTexFmts::RGBA8:
+            case (uint8_t)GXTexFormat::RGBA8:
                 return encodeRGBA8(data, width, height);
-            case (uint8_t)DolRvlTexFmts::C4: //Intentional fall-through to unimplemented message for all items below
-            case (uint8_t)DolRvlTexFmts::C8:
-            case (uint8_t)DolRvlTexFmts::CMPR:
+            case (uint8_t)GXTexFormat::C4: //Intentional fall-through to unimplemented message for all items below
+            case (uint8_t)GXTexFormat::C8:
+            case (uint8_t)GXTexFormat::CMPR:
                 throw std::runtime_error("Unimplemented RVL texture format!");
                 break;
             default:
-                return nullptr;
+                return util::array<uint8_t>{nullptr, 0};
         }
     }
 
@@ -72,23 +72,23 @@ namespace NintyFont::RVL::Image
     {
         switch (texFmt)
         {
-            case (uint8_t)DolRvlTexFmts::I4:
+            case (uint8_t)GXTexFormat::I4:
                 return (uint8_t)ImageFormats::L4;
-            case (uint8_t)DolRvlTexFmts::I8:
+            case (uint8_t)GXTexFormat::I8:
                 return (uint8_t)ImageFormats::L8;
-            case (uint8_t)DolRvlTexFmts::IA4:
+            case (uint8_t)GXTexFormat::IA4:
                 return (uint8_t)ImageFormats::L4A;
-            case (uint8_t)DolRvlTexFmts::IA8:
+            case (uint8_t)GXTexFormat::IA8:
                 return (uint8_t)ImageFormats::L8A;
-            case (uint8_t)DolRvlTexFmts::RGB565:
+            case (uint8_t)GXTexFormat::RGB565:
                 return (uint8_t)ImageFormats::RGB565;
-            case (uint8_t)DolRvlTexFmts::RGB5A3:
+            case (uint8_t)GXTexFormat::RGB5A3:
                 return (uint8_t)ImageFormats::RGB5A3;
-            case (uint8_t)DolRvlTexFmts::RGBA8:
+            case (uint8_t)GXTexFormat::RGBA8:
                 return (uint8_t)ImageFormats::RGBA8;
-            case (uint8_t)DolRvlTexFmts::C4: //Intentional fall-through to unimplemented message for all items below
-            case (uint8_t)DolRvlTexFmts::C8:
-            case (uint8_t)DolRvlTexFmts::CMPR:
+            case (uint8_t)GXTexFormat::C4: //Intentional fall-through to unimplemented message for all items below
+            case (uint8_t)GXTexFormat::C8:
+            case (uint8_t)GXTexFormat::CMPR:
                 throw std::runtime_error("Unimplemented RVL texture format!");
                 break;
             default:
@@ -101,21 +101,21 @@ namespace NintyFont::RVL::Image
         switch (generalFmt)
         {
             case (uint8_t)ImageFormats::L4:
-                return (uint8_t)DolRvlTexFmts::I4;
+                return (uint8_t)GXTexFormat::I4;
             case (uint8_t)ImageFormats::L8:
-                return (uint8_t)DolRvlTexFmts::I8;
+                return (uint8_t)GXTexFormat::I8;
             case (uint8_t)ImageFormats::L4A:
-                return (uint8_t)DolRvlTexFmts::IA4;
+                return (uint8_t)GXTexFormat::IA4;
             case (uint8_t)ImageFormats::L8A:
-                return (uint8_t)DolRvlTexFmts::IA8;
+                return (uint8_t)GXTexFormat::IA8;
             case (uint8_t)ImageFormats::RGB565:
-                return (uint8_t)DolRvlTexFmts::RGB565;
+                return (uint8_t)GXTexFormat::RGB565;
             case (uint8_t)ImageFormats::RGB5A3:
-                return (uint8_t)DolRvlTexFmts::RGB5A3;
+                return (uint8_t)GXTexFormat::RGB5A3;
             case (uint8_t)ImageFormats::RGBA8:
-                return (uint8_t)DolRvlTexFmts::RGBA8;
+                return (uint8_t)GXTexFormat::RGBA8;
             default:
-                return (uint8_t)DolRvlTexFmts::RGBA8; //In case it's something unknown, default to RGBA8
+                return (uint8_t)GXTexFormat::RGBA8; //In case it's something unknown, default to RGBA8
         }
     }
 
@@ -368,9 +368,10 @@ namespace NintyFont::RVL::Image
         return argbBuf;
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeI4(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeI4(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *i4Buf = new std::vector<uint8_t>((uint32_t)std::ceil(0.5F * width * height));
+        uint32_t size = (uint32_t)std::ceil(0.5F * width * height);
+        uint8_t *i4Buf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 8)
         {
@@ -389,7 +390,7 @@ namespace NintyFont::RVL::Image
                         float floatpixel = (((red + green + blue) / 3.0F) * (alpha / 255.0F)) / 17.0F;
                         uint8_t newpixel = std::round(floatpixel);
 
-                        (*i4Buf)[i] = newpixel << 4;
+                        i4Buf[i] = newpixel << 4;
 
                         blue = argbBuf[(((ypixel * width) + xpixel) * 4) + 4];
                         green = argbBuf[(((ypixel * width) + xpixel) * 4) + 5];
@@ -398,18 +399,18 @@ namespace NintyFont::RVL::Image
                         floatpixel = (((red + green + blue) / 3.0F) * (alpha / 255.0F)) / 17.0F;
                         newpixel = (uint8_t)std::round(floatpixel) & 0x0F;
 
-                        (*i4Buf)[i] |= newpixel;
-                        i++;
+                        i4Buf[i++] |= newpixel;
                     }
                 }
             }
         }
-        return i4Buf;
+        return util::array<uint8_t>{i4Buf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeI8(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeI8(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *i8Buf = new std::vector<uint8_t>(width * height);
+        uint32_t size = width * height;
+        uint8_t *i8Buf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
@@ -428,18 +429,18 @@ namespace NintyFont::RVL::Image
                         float floatpixel = ((red + green + blue) / 3.0F) * (alpha / 255.0F);
                         uint8_t newpixel = std::round(floatpixel);
 
-                        (*i8Buf)[i] = newpixel;
-                        i++;
+                        i8Buf[i++] = newpixel;
                     }
                 }
             }
         }
-        return i8Buf;
+        return util::array<uint8_t>{i8Buf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeIA4(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeIA4(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *ia4Buf = new std::vector<uint8_t>(width * height);
+        uint32_t size = width * height;
+        uint8_t *ia4Buf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
@@ -457,23 +458,22 @@ namespace NintyFont::RVL::Image
                         uint8_t alpha  = argbBuf[(((ypixel * width) + xpixel) * 4) + 3];
                         float floatpixel = alpha / 17.0F;
                         uint8_t newpixel = std::round(floatpixel);
-                        (*ia4Buf)[i] = newpixel << 4;
+                        ia4Buf[i] = newpixel << 4;
 
                         floatpixel = ((red + green + blue) / 3.0F) / 17.0F;
                         newpixel = std::round(floatpixel);
-                        (*ia4Buf)[i] |= newpixel;
-
-                        i++;
+                        ia4Buf[i++] |= newpixel;
                     }
                 }
             }
         }
-        return ia4Buf;
+        return util::array<uint8_t>{ia4Buf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeIA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeIA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *ia8Buf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *ia8Buf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
@@ -491,22 +491,20 @@ namespace NintyFont::RVL::Image
                         uint8_t alpha  = argbBuf[(((ypixel * width) + xpixel) * 4) + 3];
                         float floatpixel = (red + green + blue) / 3.0F;
                         uint8_t newpixel = std::round(floatpixel);
-                        (*ia8Buf)[i] = newpixel;
-                        i++;
 
-                        (*ia8Buf)[i] = alpha;
-                        i++;
+                        ia8Buf[i++] = newpixel;
+                        ia8Buf[i++] = alpha;
                     }
                 }
             }
         }
-        return ia8Buf;
+        return util::array<uint8_t>{ia8Buf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGB565(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        //This is broken...
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         const float convRB = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F);
         const float convG = ((float)(1 << 8) - 1.0F) / ((float)(1 << 6) - 1.0F);
@@ -527,18 +525,19 @@ namespace NintyFont::RVL::Image
                         uint16_t newpixelR = std::round(((float)red * ((float)alpha / 255.0F)) / convRB);
                         uint16_t newpixel = newpixelR << 11 | newpixelG << 5 | newpixelB;
 
-                        rgbBuf->at(i++) = newpixel >> 8;
-                        rgbBuf->at(i++) = newpixel & 0xFF;
+                        rgbBuf[i++] = newpixel >> 8;
+                        rgbBuf[i++] = newpixel & 0xFF;
                     }
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGB5A3(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGB5A3(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 2);
+        uint32_t size = width * height * 2;
+        uint8_t *rgbBuf = new uint8_t[size];
         const float conv3 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 3) - 1.0F);
         const float conv4 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
         const float conv5 = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F);
@@ -572,19 +571,20 @@ namespace NintyFont::RVL::Image
                             newpixel = 0x8000 | (newpixelR << 10) | (newpixelG << 5) | newpixelB;
                         }
                         
-                        rgbBuf->at(i++) = newpixel >> 8;
-                        rgbBuf->at(i++) = newpixel & 0xFF;
+                        rgbBuf[i++] = newpixel >> 8;
+                        rgbBuf[i++] = newpixel & 0xFF;
                         
                     }
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 
-    std::vector<uint8_t> *TextureCodec::encodeRGBA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
+    util::array<uint8_t> TextureCodec::encodeRGBA8(uint8_t *argbBuf, uint16_t width, uint16_t height)
     {
-        std::vector<uint8_t> *rgbBuf = new std::vector<uint8_t>(width * height * 4);
+        uint32_t size = width * height * 4;
+        uint8_t *rgbBuf = new uint8_t[size];
         int32_t i = 0;
         for (uint16_t ytile = 0; ytile < height; ytile += 4)
         {
@@ -596,11 +596,9 @@ namespace NintyFont::RVL::Image
                     {
                         uint8_t red    = argbBuf[(((ypixel * width) + xpixel) * 4) + 2];
                         uint8_t alpha  = argbBuf[(((ypixel * width) + xpixel) * 4) + 3];
-                        (*rgbBuf)[i] = alpha;
-                        i++;
 
-                        (*rgbBuf)[i] = red;
-                        i++;
+                        rgbBuf[i++] = alpha;
+                        rgbBuf[i++] = red;
                     }
                 }
                 for (uint16_t ypixel = ytile; ypixel < ytile + 4; ypixel++)
@@ -609,15 +607,13 @@ namespace NintyFont::RVL::Image
                     {
                         uint8_t blue   = argbBuf[(((ypixel * width) + xpixel) * 4) + 0];
                         uint8_t green  = argbBuf[(((ypixel * width) + xpixel) * 4) + 1];
-                        (*rgbBuf)[i] = green;
-                        i++;
 
-                        (*rgbBuf)[i] = blue;
-                        i++;
+                        rgbBuf[i++] = green;
+                        rgbBuf[i++] = blue;
                     }
                 }
             }
         }
-        return rgbBuf;
+        return util::array<uint8_t>{rgbBuf, size};
     }
 }

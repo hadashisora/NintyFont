@@ -16,6 +16,7 @@
 #include "binarytools/binaryreader.h"
 #include "binarytools/binarywriter.h"
 #include "binarytools/blocklinker.h"
+#include "sizedarray.h"
 
 namespace NintyFont::RVL::Format
 {
@@ -32,7 +33,7 @@ namespace NintyFont::RVL::Format
         virtual ~TGLP();
         //Methods
         virtual void validateSignature(void);
-        virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets, uint32_t align = 0x10);
+        virtual void serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<util::array<uint8_t>> *sheets, uint32_t align = 0x10);
         //Fields
         uint32_t magic; //Should always be 0x54474C50, TGLP in ASCII
         uint32_t length; //TGLP section length in bytes

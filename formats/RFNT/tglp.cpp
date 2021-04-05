@@ -56,7 +56,7 @@ namespace NintyFont::RVL::Format
         else return;
     }
 
-    void TGLP::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<std::vector<uint8_t> *> *sheets, uint32_t align)
+    void TGLP::serialize(BinaryTools::BinaryWriter *bw, BinaryTools::BlockLinker *linker, std::vector<util::array<uint8_t>> *sheets, uint32_t align)
     {
         linker->incLookupValue("blockCount", 1);
         bw->write(magic);
@@ -84,10 +84,11 @@ namespace NintyFont::RVL::Format
         linker->addLookupValue("sheetPtr", bw->getPosition());
         for (auto sheet = sheets->begin(); sheet != sheets->end(); sheet++)
         {
-            for (auto val = (*sheet)->begin(); val != (*sheet)->end(); val++)
-            {
-                bw->write(*val);
-            }
+            bw->write((*sheet).arr, 0, (*sheet).size);
+            // for (auto val = (*sheet)->begin(); val != (*sheet)->end(); val++)
+            // {
+            //     bw->write(*val);
+            // }
         }
         //Padding
         padBytes = 0x4U - (bw->getPosition() % 0x4U); //Yes I know this setup for calculating padding is a bodge...deal with it

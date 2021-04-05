@@ -122,6 +122,7 @@ add_executable(${PROJECT_NAME}
     controls/endiannesspicker.cpp
     controls/endiannesspicker.h
     membercallback.h
+    sizedarray.h
     )
 
 configure_file("DerivedName.txt" "DerivedName.txt" COPYONLY)
