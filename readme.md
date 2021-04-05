@@ -33,15 +33,14 @@ Note: package names are provided only for `apt`(Debian, Ubuntu, Mint, etc...)(us
 * git (`apt install git`, `pacman -S git`)
 
 ### Building
-```
+```bash
 git clone https://github.com/TheFearsomeDzeraora/NintyFont.git NintyFont
 cd NintyFont
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
-make -j4
+make -j$(nproc)
 strip NintyFont
 ```
-* on line `make -j4` you may swap `-j4` to have the number of logical cores in your system(for example it would be `-j12` for a 12-core CPU)
 * the last command `strip NintyFont` is optional, since it just removes all symbols from the executable to make it smaller
 
 This will produce an executable file named `NintyFont` in the `build` folder
@@ -59,12 +58,35 @@ Note: everything other than MSYS2 itself has to be installed from the MSYS2 prom
 
 ### Building
 For ease of use a batch script is provided for automatically compiling this (certainly __not__ because I was tired of recalling these commands on another computer just to make Windows build myself)
-```
+```bash
 git clone https://github.com/TheFearsomeDzeraora/NintyFont.git NintyFont
 cd NintyFont
 ./msys2_build.sh
 ```
 This will produce `NintyFont.exe` in the `build` folder. Note that you also need the supporting DLLs for this to run (which can be found in the `mingw64/bin` folder of your MSYS2 install directory)(if you're too lazy to hunt these down, just grab a prebuilt release and replace the EXE there with the one you compiled)(alternitively you may try doing a static build, but in my experience Qt doesn't always like being linked statically).
+
+## Building for Windows (MinGW-w64 static cross-compile under Linux)
+### Requirements
+Note: packages are listed only for Ubuntu/Mint(`apt`), may also work on Debian, but I don't know package names under other distros.
+* A computer running a Linux distro (duh)
+* MinGW-w64 (`sudo apt install mingw-w64 mingw-w64-tools`)
+* Static Qt5 compiled for MinGW (good luck with this) (you can try following [a guide I made](https://gist.github.com/TheFearsomeDzeraora/6444cea25c64eb887b4c3462b125c441), though it may or may not work for you)
+* Static fmt compiled for MinGW (it uses CMake as well, so you can just use the toolchan file provided here(`mingw-w64-x86_64.cmake`) to build it)
+* CMake (`sudo apt install cmake`)
+* git (`sudo apt install git`)
+
+### Building
+```bash
+git clone https://github.com/TheFearsomeDzeraora/NintyFont.git NintyFont
+cd NintyFont
+mkdir build && cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=../mingw-w64-x86_64.cmake -DCMAKE_BUILD_TYPE=Release -DSTATIC=1 ..
+make -j$(nproc)
+x86_64-w64-mingw32-strip NintyFont.exe
+```
+* the last command `x86_64-w64-mingw32-strip NintyFont.exe` is optional, since it just removes all symbols from the executable to make it smaller
+
+This will produce an executable file named `NintyFont.exe` in the `build` folder
 
 ## Building for OS X / macOS
 \*To be done\*
