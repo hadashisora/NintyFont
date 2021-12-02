@@ -169,6 +169,22 @@ namespace NintyFont::NTR
                 return a->index < b->index;
             });
 
+            // Merge any entries which define a glyph with the same index, since apparently some fonts have duped entries across different CMAPs
+            for (auto e = charMaps.begin(); e != std::prev(charMaps.end()); e++)
+            {
+                for (auto e2 = std::next(e); e2 != charMaps.end();)
+                {
+                    if ((*e)->index == (*e2)->index)
+                    {
+                        if ((*e)->code != (*e2)->code) throw std::runtime_error("Error: same glyph redefined with different code point!!");
+
+                        e2 = charMaps.erase(e2);
+                        continue;
+                    }
+                    e2++;
+                }
+            }
+
             if (charMaps.size() != charWidths.size()) //throw std::runtime_error("Mismatched number of charMaps and charWidths!");
             {
                 while (charMaps.size() != charWidths.size())
@@ -304,7 +320,9 @@ namespace NintyFont::NTR
             index++;
         }
 
-        bool isGF = getGamefreak(fontProperties);
+        bool isGF = false; 
+        try { getGamefreak(fontProperties); }
+        catch (std::out_of_range) { }
 
         size_t cellBytes = ceil((double)(cellSize.first * cellSize.second * Format::getNtrFontBpp(fontProperties))/8.0);
         if (isGF) cellBytes += 3;

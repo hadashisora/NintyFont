@@ -2,22 +2,25 @@
 NintyFont is a program for editing Nintendo's binary fonts, written in C++ using Qt5 for GUI. It's meant as sort of expanded version of RoadrunnerWMC's BRFNTify-Next.
 
 ## Credits
-* Tempus, RoadrunnerWMC - making the original [BRFNTify-Next](https://github.com/RoadrunnerWMC/BRFNTify-Next), from which this borrows the GUI design (and a lot of GUI code, since I wan't very good with Qt when I started this), as well as GC/Wii texture codec code from TPLLib
+* Tempus, RoadrunnerWMC - making the original [BRFNTify-Next](https://github.com/RoadrunnerWMC/BRFNTify-Next), from which this borrows the GUI design (and a lot of GUI code, since I wasn't very good with Qt when I started this), as well as GC/Wii texture codec code from TPLLib
 * gdkchan, kwsch - 3DS texture decoding from [Ohana3DS-Rebirth](https://github.com/gdkchan/Ohana3DS-Rebirth)
 * [Citra emulator](https://github.com/citra-emu/citra) for being a go-to reference on how to CMake
 * TheDzeraora - improving the BRFNTify-Next idea to seamlessly support different font formats, binary IO, font format handling, BFTTF/BFOTF crypto, CTR texture encoding
 
+## Notice
+This software was made purely as a passion project by a single person, and there hasn't been a lot of testing done since I just don't have the time to do it. Thus, as per the GPL, I give no warranty on this s/w and just hope that with the limited testing I gave it, it ends up working for you too. Sorry for the inconvenience. If you find major bugs, please report them to the issue tracker on the repo.
+
 ## Supported formats
-* BRFNT - Binary Revolution FoNT, used in many Wii titles utilizing NW4R package. Both opening and saving is supported, with exception of a few texture formats which have broken output. BRFNU/BRFNA aren't not supported yet
-* NFTR/RTFN - Nitro FonT Resource, used by a lot of DS titles utilizing the NTR_SYSTEM SDK package. As well as normal format, the slightly different version used in GameFreak's Pocket Monsters BW/B2W2 games is also supported. Both opening and saving work
-* Pocket Monsters D/P/Pt/HG/SS fonts, supports both opening and saving
-* BCFNT - Binary Citrus FoNT, used in many 3DS titles utilizing old versions of NW4C. Both opening and saving work, but texture encoding hasn't been tested very thoroughly yet
-* JUTResFont/FONTbfn1 - JUtility Resource Font (at least called so in the J library used in WindWaker), used by many 1st and 2nd party Nintendo GameCube and (early )Wii games. Opening is supported, no saving yet. More testing needs to be done, as a lot of this is based on RE'd code from Zelda WW
-* BFTTF/BFOTF - Binary caFe TrueType Font / OpenType Font, a simple XOR encryption ontop of normal TTF/OTF fonts. Supports encryption/decryption of both WiiU and Switch variants, as well as Windows one (probably meant for development purposes, I doubt a commercial game would have a font encrypted with the Windows key)
+* BRFNT - Binary Revolution FoNT, used in many Wii titles utilizing NW4R package. Both opening and saving is supported. BRFNU/BRFNA aren't supported yet;
+* NFTR/RTFN - Nitro FonT Resource, used by a lot of DS titles utilizing the NTR_SYSTEM SDK package. As well as normal format, the slightly different version used in GameFreak's Pocket Monsters BW/B2W2 games is also supported. Both opening and saving work;
+* Pocket Monsters D/P/Pt/HG/SS fonts, supports both opening and saving;
+* BCFNT - Binary Citrus FoNT, used in many 3DS titles utilizing old versions of NW4C. Both opening and saving work, but texture encoding hasn't been tested very thoroughly yet;
+* BFTTF/BFOTF - Binary caFe TrueType Font / OpenType Font, a simple XOR encryption ontop of normal TTF/OTF fonts. Supports encryption/decryption of both WiiU and Switch variants, as well as Windows one (probably meant for development purposes, I doubt a commercial game would have a font encrypted with the Windows key).
 
 ### In progress / planned to support
-* BFFNT - Binary caFe FoNT (or at least it used to be initially), initially a WiiU/Cafe NW4F format, then with later versions of NW4C also became a 3DS/CTR format, and with the release of the Switch/NX also became used there. Currently not implemented at all, needs WiiU and Switch texture codecs
-* (more may be supported later as per request)
+* JUTResFont/FONTbfn1 - JUtility Resource Font (at least called so in the J library used in WindWaker), used by many 1st and 2nd party Nintendo GameCube and (early )Wii games. Opening is supported (but very much broken, cause I've not figured a clean way to do things with it yet), no saving. More testing needs to be done, as a lot of this is based on RE'd code from Zelda WW and a lot of guesswork;
+* BFFNT - Binary caFe FoNT (or at least it used to be initially), initially a WiiU/Cafe NW4F format, then with later versions of NW4C also became a 3DS/CTR format, and with the release of the Switch/NX also became used there. Currently not implemented at all, needs WiiU and Switch texture codecs;
+* (more may be supported later as per request).
 
 # Building instructions
 Basic build instructions for native compiling. For development you'd obviously need at least some knowledge on how to work with CMake files.
