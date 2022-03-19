@@ -162,7 +162,7 @@ namespace NintyFont::CTR::Image
         uint8_t* argbBuf = new uint8_t[width * height * 4];
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -190,7 +190,7 @@ namespace NintyFont::CTR::Image
         uint8_t* argbBuf = new uint8_t[width * height * 4];
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -219,7 +219,7 @@ namespace NintyFont::CTR::Image
         uint8_t* argbBuf = new uint8_t[width * height * 4];
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -249,7 +249,7 @@ namespace NintyFont::CTR::Image
         uint8_t* argbBuf = new uint8_t[width * height * 4];
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -396,7 +396,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -426,7 +426,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -457,7 +457,7 @@ namespace NintyFont::CTR::Image
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 5) - 1.0F); //conversion coefficient, but in a math expression so it's better understood where it comes from
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -494,7 +494,7 @@ namespace NintyFont::CTR::Image
         const float convG = ((float)(1 << 8) - 1.0F) / ((float)(1 << 6) - 1.0F);
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -531,7 +531,7 @@ namespace NintyFont::CTR::Image
         const float conv = ((float)(1 << 8) - 1.0F) / ((float)(1 << 4) - 1.0F);
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -566,7 +566,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -596,7 +596,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -626,7 +626,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel++)
                 {
@@ -657,7 +657,7 @@ namespace NintyFont::CTR::Image
         int32_t i = 0;
         for (uint16_t tY = 0; tY < height / 8; tY++)
         {
-            for (uint16_t tX = 0; tX < height / 8; tX++)
+            for (uint16_t tX = 0; tX < width / 8; tX++)
             {
                 for (uint16_t pixel = 0; pixel < 64; pixel += 2)
                 {
