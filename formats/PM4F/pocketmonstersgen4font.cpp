@@ -53,9 +53,54 @@ namespace NintyFont::NTR::PM4
             header = new Format::PMHeader(br);
             //Read widths
             br->setPosition(header->ptrWidths);
-            for (uint32_t i = 0U; i < header->glyphCount; i++)
+            size_t filesize = br->getTrueFileSize();
+            if (header->ptrWidths + 4U + br->peekUInt32() != filesize) //Detect Korean format heuristically
             {
-                charWidths.push_back(br->readByte());
+                isKorean = false;
+                for (uint32_t i = 0U; i < header->glyphCount; i++)
+                {
+                    charWidths.push_back(br->readByte());
+                }
+            }
+            else
+            {
+                isKorean = true;
+                br->readUInt32();
+                uint32_t runCount = br->readUInt32();
+                uint32_t i = 0U;
+                for (uint32_t runIndex = 0U; runIndex < runCount; runIndex++)
+                {
+                    uint16_t runEnd = br->readUInt16();
+                    uint16_t runValue = br->readUInt16();
+                    uint32_t runOffset = br->readUInt32();
+                    if (runValue == 0xFFFF)
+                    {
+                        //Run stored uncompressed
+                        size_t pos = br->getPosition();
+                        br->setPosition(header->ptrWidths + 4U + runOffset);
+                        for (; i < runEnd; i++)
+                        {
+                            charWidths.push_back(br->readByte());
+                        }
+                        br->setPosition(pos);
+                    }
+                    else if (runValue == 0xFFFE)
+                    {
+                        //Run of question marks
+                        for (; i < runEnd; i++)
+                        {
+                            charWidths.push_back(255U); //Magic number
+                        }
+                    }
+                    else
+                    {
+                        //Run of single value
+                        for (; i < runEnd; i++)
+                        {
+                            charWidths.push_back((uint8_t)runValue);
+                        }
+                    }
+                }
             }
 
             //Reading and decoding images
@@ -166,9 +211,112 @@ namespace NintyFont::NTR::PM4
         }
         //Write widths
         linker->addLookupValue("ptrWidths", bw->getPosition());
-        for (uint32_t i = 0; i < glyphs.size(); i++)
+        if (!isKorean)
         {
-            bw->write(((PropertyList::Property<uint8_t> *)glyphs.at(i)->props->at(0))->value);
+            for (uint32_t i = 0; i < glyphs.size(); i++)
+            {
+                bw->write(((PropertyList::Property<uint8_t> *)glyphs.at(i)->props->at(0))->value);
+            }
+        }
+        else
+        {
+            const uint16_t RUN_LENGTH_MIN = 0xFF;
+            std::vector<uint16_t> runEnds;
+            std::vector<uint16_t> runValues;
+            std::vector<uint32_t> runOffsets;
+            std::vector<uint8_t> uncompressedCharWidths;
+            
+            bool uncompressedRunPending = false;
+            uint16_t uncompressedRunEnd = 0;
+            uint32_t uncompressedRunOffset = 0;
+
+            uint8_t previous = 0;
+            uint16_t count = 0;
+            uint8_t width;
+            for (uint32_t i = 0; i < glyphs.size(); i++)
+            {
+                width = ((PropertyList::Property<uint8_t> *)glyphs.at(i)->props->at(0))->value;
+                if (width == previous) //Run continues
+                {
+                    count++;
+                    continue;
+                }
+
+                if (previous == 0xFF || count > RUN_LENGTH_MIN) //Run ends and is long enough
+                {
+                    if (uncompressedRunPending) //Write uncompressed run entry
+                    {
+                        runEnds.push_back(uncompressedRunEnd);
+                        runValues.push_back(0xFFFF);
+                        runOffsets.push_back(uncompressedRunOffset);
+                        uncompressedRunPending = false;
+                        uncompressedRunOffset = uncompressedCharWidths.size();
+                    }
+
+                    //Write run entry
+                    runEnds.push_back((uint16_t)i);
+                    runValues.push_back((previous == 0xFF) ? 0xFFFE : previous);
+                    runOffsets.push_back(0U);
+                }
+                else if (count > 0) //Run ends and is too short
+                {
+                    for (uint16_t j = 0; j < count; j++)
+                    {
+                        uncompressedCharWidths.push_back(previous);
+                    }
+                    uncompressedRunPending = true;
+                    uncompressedRunEnd = i;
+                }
+                previous = width;
+                count = 1;
+            }
+
+            //Final run
+            if (previous == 0xFF || count > RUN_LENGTH_MIN) //Run ends and is long enough
+            {
+                if (uncompressedRunPending) //Write uncompressed run entry
+                {
+                    runEnds.push_back(uncompressedRunEnd);
+                    runValues.push_back(0xFFFF);
+                    runOffsets.push_back(uncompressedRunOffset);
+                }
+
+                //Write run entry
+                runEnds.push_back((uint16_t)glyphs.size());
+                runValues.push_back((previous == 0xFF) ? 0xFFFE : previous);
+                runOffsets.push_back(0U);
+            }
+            else if (count > 0)  //Run ends and is too short
+            {
+                for (uint16_t j = 0; j < count; j++)
+                {
+                    uncompressedCharWidths.push_back(previous);
+                }
+
+                //Write uncompressed run entry
+                runEnds.push_back((uint16_t)glyphs.size());
+                runValues.push_back(0xFFFF);
+                runOffsets.push_back(uncompressedRunOffset);
+            }
+
+            uint32_t runCount = runEnds.size();
+            uint32_t headerLength = 4U + 8U * runCount;
+            uint32_t widthsLength = headerLength + uncompressedCharWidths.size();
+
+            bw->write(widthsLength);
+            bw->write(runCount);
+            for (uint32_t i = 0; i < runCount; i++) {
+                if (runValues[i] == 0xFFFF)
+                {
+                    runOffsets[i] += headerLength;
+                }
+                bw->write(runEnds[i]);
+                bw->write(runValues[i]);
+                bw->write(runOffsets[i]);
+            }
+            for (uint32_t i = 0; i < uncompressedCharWidths.size(); i++) {
+                bw->write(uncompressedCharWidths[i]);
+            }
         }
         linker->makeBlockLink(bw);
 

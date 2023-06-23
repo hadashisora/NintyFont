@@ -40,5 +40,7 @@ namespace NintyFont::NTR::PM4
         static bool identifyFile(uint8_t *bytes);
         static std::string returnFileTypeString(void);
         static std::string returnFileExtensionString(void);
+        //Fields
+        bool isKorean;
     };
 }
